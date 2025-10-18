@@ -1104,9 +1104,13 @@ public class MainActivity extends AppCompatActivity {
 				icon.setImageResource(R.drawable.unknown);
 			else {
 				Bitmap icon_bmp=BitmapFactory.decodeByteArray(mi.icon,0,mi.icon.length);
-				if(!mi.decrypt)
-					icon_bmp=to_gray_bmp(icon_bmp);
-				icon.setImageBitmap(icon_bmp);
+				if(icon_bmp!=null){
+					if(!mi.decrypt)
+						icon_bmp=to_gray_bmp(icon_bmp);
+					icon.setImageBitmap(icon_bmp);
+				}
+				else
+					icon.setImageResource(R.drawable.unknown);
 			}
 			
 			TextView name=(TextView)curView.findViewById(R.id.game_name);
