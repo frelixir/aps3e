@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import aenu.aps3e.Application;
-
 public class Emulator {
 
     public static class ConfigFileException extends Exception{

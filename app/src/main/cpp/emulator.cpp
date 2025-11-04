@@ -214,8 +214,123 @@ static void j_close_config_file(JNIEnv* env,jobject self,YAML::Node* config_node
     env->ReleaseStringUTFChars(config_path,path);
     delete config_node;
 }
-#elif CFG_TYPE_TOLM
-#error "CFG_TYPE_TOLM not supported"
+#elif CFG_TYPE_TOML
+#include "cpptoml/include/cpptoml.h"
+static std::shared_ptr<cpptoml::table>* j_open_config_str(JNIEnv* env,jobject self,jstring jconfig_str) {
+    jboolean is_copy=false;
+    const char* config_str=env->GetStringUTFChars(jconfig_str,&is_copy);
+    std::istringstream config_stream(config_str);
+    cpptoml::parser p{config_stream};
+    auto toml=p.parse();
+    LOGE("open_config_str %d",toml.use_count());
+    env->ReleaseStringUTFChars(jconfig_str,config_str);
+    std::unique_ptr<std::shared_ptr<cpptoml::table>> toml_p=std::make_unique<std::shared_ptr<cpptoml::table>>(toml);
+    return toml_p.release();
+}
+static jstring j_close_config_str(JNIEnv* env,jobject self,std::shared_ptr<cpptoml::table>* config_table){
+    std::unique_ptr<std::shared_ptr<cpptoml::table>> toml_p;
+    toml_p.reset(config_table);
+    std::ostringstream out_strm;
+    out_strm << *toml_p;
+    std::string out=out_strm.str();
+    jboolean is_copy=false;
+    jstring result=env->NewStringUTF(out.c_str());
+    return result;
+}
+static std::shared_ptr<cpptoml::table>* j_open_config_file(JNIEnv* env,jobject self,jstring config_path){
+    jboolean is_copy=false;
+    const char* path=env->GetStringUTFChars(config_path,&is_copy);
+
+    std::shared_ptr<cpptoml::table> toml=cpptoml::parse_file(path);
+    env->ReleaseStringUTFChars(config_path,path);
+    std::unique_ptr<std::shared_ptr<cpptoml::table>> toml_p=std::make_unique<std::shared_ptr<cpptoml::table>>(toml);
+    return toml_p.release();
+}
+static jstring j_load_config_entry(JNIEnv* env,jobject self,std::shared_ptr<cpptoml::table>* config_table,jstring tag){
+    jboolean is_copy=false;
+    const char* tag_cstr=env->GetStringUTFChars(tag,&is_copy);
+    std::string  tag_str(tag_cstr);
+    env->ReleaseStringUTFChars(tag,tag_cstr);
+
+    size_t pos=tag_str.find('|');
+    std::string  table_name=tag_str.substr(0,pos);
+    std::string  key_name=tag_str.substr(pos+1);
+
+    std::shared_ptr<cpptoml::table> table=(*config_table)->get_table(table_name);
+    if(!table){
+        return NULL;
+    }
+    if(const auto val=table->get_as<bool>(key_name);val){
+        std::string val_str=*val?"true":"false";
+        LOGE("load_config_entry Z %s %s",tag_str.c_str(),val_str.c_str());
+        jstring result=env->NewStringUTF(val_str.c_str());
+        return result;
+    }
+    else if(const auto val=table->get_as<int>(key_name);val){
+        std::string val_str=std::to_string(*val);
+        LOGE("load_config_entry I %s %s",tag_str.c_str(),val_str.c_str());
+        jstring result=env->NewStringUTF(val_str.c_str());
+        return result;
+    }
+    else if(const auto val=table->get_as<double>(key_name);val){
+        std::string val_str=std::to_string(*val);
+        LOGE("load_config_entry F %s %s",tag_str.c_str(),val_str.c_str());
+        jstring result=env->NewStringUTF(val_str.c_str());
+        return result;
+    }
+    else if(const auto val=table->get_as<std::string>(key_name);val){
+        LOGE("load_config_entry S %s %s",tag_str.c_str(),val->c_str());
+        jstring result=env->NewStringUTF(val->c_str());
+        return result;
+    }
+
+    return NULL;
+}
+static jobjectArray j_load_config_entry_ty_arr(JNIEnv* env,jobject self,std::shared_ptr<cpptoml::table>* config_table,jstring tag){
+    return NULL;
+}
+static void j_save_config_entry(JNIEnv* env,jobject self,std::shared_ptr<cpptoml::table>* config_table,jstring tag,jstring val){
+    jboolean is_copy=false;
+    const char* tag_cstr=env->GetStringUTFChars(tag,&is_copy);
+    const char* val_cstr=env->GetStringUTFChars(val,&is_copy);
+    std::string  tag_str(tag_cstr);
+    std::string  val_str(val_cstr);
+    env->ReleaseStringUTFChars(tag,tag_cstr);
+    env->ReleaseStringUTFChars(val,val_cstr);
+
+    size_t pos=tag_str.find('|');
+    std::string  table_name=tag_str.substr(0,pos);
+    std::string  key_name=tag_str.substr(pos+1);
+    std::shared_ptr<cpptoml::table> table=(*config_table)->get_table(table_name);
+    if(val_str=="true"||val_str=="false"){
+        LOGE("save_config_entry Z %s %s",tag_str.c_str(),val_str.c_str());
+        table->insert(key_name,val_str=="true");
+    }
+    else if(val_str.find('.')!=std::string::npos){
+        LOGE("save_config_entry F %s %s",tag_str.c_str(),val_str.c_str());
+        table->insert(key_name,std::stod(val_str));
+    }
+    else if(const auto begin=val_str[0]!='-'?val_str.begin():++val_str.begin();std::all_of(begin,val_str.end(),::isdigit)){
+        LOGE("save_config_entry I %s %s",tag_str.c_str(),val_str.c_str());
+        table->insert(key_name,std::stoi(val_str));
+    }
+    else{
+        LOGE("save_config_entry S %s %s",tag_str.c_str(),val_str.c_str());
+        table->insert(key_name,val_str);
+    }
+}
+static void j_save_config_entry_ty_arr(JNIEnv* env,jobject self,std::shared_ptr<cpptoml::table>* config_table,jstring tag,jobjectArray val) {
+}
+static void j_close_config_file(JNIEnv* env,jobject self,std::shared_ptr<cpptoml::table>* config_table,jstring config_path){
+    jboolean is_copy=false;
+    const char* path=env->GetStringUTFChars(config_path,&is_copy);
+    std::ofstream fout(path);
+    fout << **config_table;
+    fout.close();
+    env->ReleaseStringUTFChars(config_path,path);
+    std::unique_ptr<std::shared_ptr<cpptoml::table>> toml_p;
+    toml_p.reset(config_table);
+}
 #else
 #error "CFG_TYPE_XXX not defined"
 #endif
@@ -244,8 +359,14 @@ static void j_setup_game_path(JNIEnv* env,jobject self,jobject path ){
     jclass path_cls;
     if(env->IsInstanceOf(path,path_cls=env->FindClass("aenu/emulator/Emulator$Path"))){
         jfieldID f_fd  = env->GetFieldID(path_cls, "fd", "I");
-        ae::boot_type=ae::BOOT_TYPE_WITH_FD;
         ae::boot_game_fd=env->GetIntField(path, f_fd);
+        if(ae::boot_game_fd!=-1)
+            ae::boot_type=ae::BOOT_TYPE_WITH_FD;
+        else{
+            jfieldID f_uri  = env->GetFieldID(path_cls, "uri", "Ljava/lang/String;");
+            ae::boot_game_uri=std::string(env->GetStringUTFChars(reinterpret_cast<jstring>(env->GetObjectField(path, f_uri)), nullptr));
+            ae::boot_type=ae::BOOT_TYPE_WITH_URI;
+        }
     }
     else if(env->IsInstanceOf(path,path_cls=env->FindClass("java/lang/String"))){
         const char*  _path = env->GetStringUTFChars(reinterpret_cast<jstring>(path), nullptr);

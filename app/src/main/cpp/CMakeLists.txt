@@ -45,6 +45,8 @@ target_sources(emu
         rpcs3/rpcs3/rpcs3_version.cpp
         rpcs3/rpcs3/stb_image.cpp
         rpcs3/rpcs3/stdafx.cpp
+        aps3e_rp3_impl.cpp
+        aps3e_emu.cpp
         aps3e.cpp
         vkapi.cpp
         vkutil.cpp
@@ -52,6 +54,7 @@ target_sources(emu
         glsl2spv.cpp
         meminfo.cpp
         emulator.cpp
+        emulator_aps3e.cpp
 )
 
 target_link_libraries(emu PRIVATE rpcs3_emu)

@@ -1,7 +1,219 @@
-//
-// Created by aenu on 2025/6/2.
 // SPDX-License-Identifier: WTFPL
-//
+#include <android/log.h>
+#include <jni.h>
+#include <filesystem>
+#define VK_USE_PLATFORM_ANDROID_KHR
+#include <vulkan/vulkan.h>
+#include "emulator_aps3e.h"
+#include "cpuinfo.h"
+#include "Emu/system_config.h"
+#include "Loader/PSF.h"
+
+
+#define LOG_TAG "aps3e_native"
+
+#define LOGW(...) {      \
+    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,"%s : %d",__func__,__LINE__);\
+	__android_log_print(ANDROID_LOG_ERROR, LOG_TAG,__VA_ARGS__);\
+}
+
+#define LOGE(...) {      \
+    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,"%s : %d",__func__,__LINE__);\
+	__android_log_print(ANDROID_LOG_ERROR, LOG_TAG,__VA_ARGS__);\
+}
+
+static jboolean j_install_firmware(JNIEnv* env,jobject self,jint pup_fd){
+    //jboolean is_copy=false;
+    //const char* path=env->GetStringUTFChars(pup_path,&is_copy);
+    jboolean result= ae::install_firmware(pup_fd);
+    //env->ReleaseStringUTFChars(pup_path,path);
+    return result;
+}
+
+/*
+static jboolean j_install_pkg(JNIEnv* env,jobject self,jstring pkg_path){
+	jboolean is_copy=false;
+	const char* path=env->GetStringUTFChars(pkg_path,&is_copy);
+    jboolean result= aps3e_util::install_pkg(path);
+    env->ReleaseStringUTFChars(pkg_path,path);
+	return result;
+}*/
+
+static jboolean j_install_pkg(JNIEnv* env,jobject self,jint pkg_fd){
+    //jboolean is_copy=false;
+    //const char* path=env->GetStringUTFChars(pkg_path,&is_copy);
+    jboolean result= ae::install_pkg(pkg_fd);
+    //env->ReleaseStringUTFChars(pkg_path,path);
+    return result;
+}
+
+static jboolean j_install_edat(JNIEnv* env,jobject self,jint edat_fd){
+    fs::file edat_f=fs::file::from_fd(edat_fd);
+    return ae::install_edat(edat_f);
+}
+
+static jobject j_meta_info_from_dir(JNIEnv* env,jobject self,jstring jdir_path){
+
+    auto fetch_psf_path=[](const std::string& dir_path){
+        std::string sub_paths[]={
+                "/PARAM.SFO","/PS3_GAME/PARAM.SFO"
+        };
+        for(std::string& sub_path:sub_paths){
+            std::string psf_path=dir_path+sub_path;
+            if(std::filesystem::exists(psf_path))
+                return psf_path;
+        }
+        return std::string{};
+    };
+
+    auto fetch_eboot_path=[](const std::string& dir_path){
+        std::string sub_paths[]=
+                {
+                        "/EBOOT.BIN",
+                        "/USRDIR/EBOOT.BIN",
+                        "/USRDIR/ISO.BIN.EDAT",
+                        "/PS3_GAME/USRDIR/EBOOT.BIN",
+                };
+        for(std::string& sub_path:sub_paths){
+            std::string eboot_path=dir_path+sub_path;
+            if(std::filesystem::exists(eboot_path))
+                return eboot_path;
+        }
+        return std::string{};
+    };
+
+    jboolean is_copy=false;
+    const char* _dir_path=env->GetStringUTFChars(jdir_path,&is_copy);
+    const std::string dir_path=_dir_path;
+    env->ReleaseStringUTFChars(jdir_path, _dir_path);
+
+    psf::registry psf=psf::load_object(fetch_psf_path(dir_path));
+#if 1
+    for(const auto& [key,value]:psf){
+        switch (value.type()) {
+            case psf::format::array:
+
+                LOGW("key %s is array!",key.c_str());
+                break;
+            case psf::format::string:
+                LOGW("key %s svalue %s",key.c_str(),value.as_string().c_str());
+                break;
+            case psf::format::integer:
+                LOGW("key %s ivalue %d",key.c_str(),value.as_integer());
+                break;
+        }
+    }
+#endif
+    jclass cls_MetaInfo=env->FindClass("aenu/aps3e/Emulator$MetaInfo");
+    jmethodID mid_MetaInfo_ctor=env->GetMethodID(cls_MetaInfo,"<init>","()V");
+    jfieldID fid_MetaInfo_eboot_path=env->GetFieldID(cls_MetaInfo,"eboot_path","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_name=env->GetFieldID(cls_MetaInfo,"name","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_serial=env->GetFieldID(cls_MetaInfo,"serial","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_category=env->GetFieldID(cls_MetaInfo,"category","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_version=env->GetFieldID(cls_MetaInfo,"version","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_decrypt=env->GetFieldID(cls_MetaInfo,"decrypt","Z");
+    jfieldID  fid_MetaInfo_resolution=env->GetFieldID(cls_MetaInfo,"resolution","I");
+    jfieldID  fid_MetaInfo_sound_format=env->GetFieldID(cls_MetaInfo,"sound_format","I");
+
+    jobject meta_info=env->NewObject(cls_MetaInfo,mid_MetaInfo_ctor);
+
+    std::string v;
+    env->SetObjectField(meta_info,fid_MetaInfo_eboot_path,env->NewStringUTF((v=fetch_eboot_path(dir_path)).c_str()));
+    env->SetBooleanField(meta_info,fid_MetaInfo_decrypt,ae::allow_eboot_decrypt(fs::file(v)));
+    env->SetObjectField(meta_info,fid_MetaInfo_name,env->NewStringUTF((v=psf::get_string(psf,"TITLE","")).c_str()));
+    env->SetObjectField(meta_info,fid_MetaInfo_serial,env->NewStringUTF((v=psf::get_string(psf,"TITLE_ID","")).c_str()));
+    env->SetObjectField(meta_info,fid_MetaInfo_category,env->NewStringUTF((v=psf::get_string(psf,"CATEGORY","??")).c_str()));
+    env->SetObjectField(meta_info,fid_MetaInfo_version,env->NewStringUTF((v=psf::get_string(psf,"APP_VER","")).c_str()));
+    env->SetIntField(meta_info,fid_MetaInfo_resolution,psf::get_integer(psf,"RESOLUTION",0));
+    env->SetIntField(meta_info,fid_MetaInfo_sound_format,psf::get_integer(psf,"SOUND_FORMAT",0));
+    return meta_info;
+}
+
+
+static jobject j_meta_info_from_iso(JNIEnv* env,jobject self,jint fd,jstring jiso_uri_path){
+
+    jclass cls_MetaInfo=env->FindClass("aenu/aps3e/Emulator$MetaInfo");
+    jmethodID mid_MetaInfo_ctor=env->GetMethodID(cls_MetaInfo,"<init>","()V");
+    jfieldID fid_MetaInfo_iso_uri=env->GetFieldID(cls_MetaInfo,"iso_uri","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_name=env->GetFieldID(cls_MetaInfo,"name","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_serial=env->GetFieldID(cls_MetaInfo,"serial","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_category=env->GetFieldID(cls_MetaInfo,"category","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_version=env->GetFieldID(cls_MetaInfo,"version","Ljava/lang/String;");
+    jfieldID fid_MetaInfo_icon=env->GetFieldID(cls_MetaInfo,"icon","[B");
+    jfieldID fid_MetaInfo_decrypt=env->GetFieldID(cls_MetaInfo,"decrypt","Z");
+    jfieldID  fid_MetaInfo_resolution=env->GetFieldID(cls_MetaInfo,"resolution","I");
+    jfieldID  fid_MetaInfo_sound_format=env->GetFieldID(cls_MetaInfo,"sound_format","I");
+
+    std::unique_ptr<iso_fs> iso=iso_fs::from_fd(fd);
+    if(!iso->load()) {
+        LOGW("Failed to load iso");
+        return NULL;
+    }
+
+    if(!iso->exists(":PS3_GAME/USRDIR/EBOOT.BIN")) {
+        LOGW("EBOOT.BIN not found");
+        return NULL;
+    }
+
+    std::vector<uint8_t> psf_data=iso->get_data_tiny(":PS3_GAME/PARAM.SFO");
+    if(psf_data.empty()) {
+        LOGW("Failed to load PARAM.SFO");
+        return NULL;
+    }
+
+    psf::registry psf=psf::load_object(fs::file(psf_data.data(),psf_data.size()),"PS3_GAME/PARAM.SFO"sv);
+
+    jobject meta_info=env->NewObject(cls_MetaInfo,mid_MetaInfo_ctor);
+    env->SetObjectField(meta_info,fid_MetaInfo_iso_uri,jiso_uri_path);
+    std::string v;
+    env->SetObjectField(meta_info,fid_MetaInfo_name,env->NewStringUTF((v=psf::get_string(psf,"TITLE","")).c_str()));
+    env->SetObjectField(meta_info,fid_MetaInfo_serial,env->NewStringUTF((v=psf::get_string(psf,"TITLE_ID","")).c_str()));
+    env->SetObjectField(meta_info,fid_MetaInfo_category,env->NewStringUTF((v=psf::get_string(psf,"CATEGORY","??")).c_str()));
+    env->SetObjectField(meta_info,fid_MetaInfo_version,env->NewStringUTF((v=psf::get_string(psf,"APP_VER","")).c_str()));
+    env->SetIntField(meta_info,fid_MetaInfo_resolution,psf::get_integer(psf,"RESOLUTION",0));
+    env->SetIntField(meta_info,fid_MetaInfo_sound_format,psf::get_integer(psf,"SOUND_FORMAT",0));
+
+    std::vector<uint8_t> icon_data=iso->get_data_tiny(":PS3_GAME/ICON0.PNG");
+    if(!icon_data.empty()) {
+        jbyteArray icon_array=env->NewByteArray(icon_data.size());
+        env->SetByteArrayRegion(icon_array,0,icon_data.size(),reinterpret_cast<const jbyte*>(icon_data.data()));
+        env->SetObjectField(meta_info,fid_MetaInfo_icon,icon_array);
+    }
+
+    env->SetBooleanField(meta_info,fid_MetaInfo_decrypt,ae::allow_eboot_decrypt(fs::file(*iso,":PS3_GAME/USRDIR/EBOOT.BIN")));
+
+    return meta_info;
+}
+static void j_setup_game_id(JNIEnv* env,jobject self,jstring id){
+    const char* _id=env->GetStringUTFChars(id,NULL);
+    ae::game_id=_id;
+    env->ReleaseStringUTFChars(id,_id);
+}
+/*public native int get_cpu_core_count();
+public native String get_cpu_name(int core_idx);
+public native int get_cpu_max_mhz(int core_idx);*/
+static jint j_get_cpu_core_count(JNIEnv* env,jobject self){
+    return cpu_get_core_count();
+}
+static jstring j_get_cpu_name(JNIEnv* env,jobject self,jint core_idx){
+    const std::string& name=cpu_get_processor_name(core_idx);
+    jstring r= env->NewStringUTF(name.c_str());
+    return r;
+}
+static jint j_get_cpu_max_mhz(JNIEnv* env,jobject self,jint core_idx){
+    return cpu_get_max_mhz(core_idx);
+}
+
+static jstring j_simple_device_info(JNIEnv* env, jobject thiz)
+{
+
+    std::string vv;//=get_auther_info();
+
+    vv+=ae::get_cpu_info();
+    vv+="\n"+ae::get_gpu_info();
+
+    return env->NewStringUTF(vv.c_str());
+}
 
 static auto gen_key=[](const std::string& name)->std::string{
     std::string k=name;
@@ -69,7 +281,7 @@ static const std::string gen_skips[]={
 
 static bool gen_is_parent(const std::string& parent_name){
     if(parent_name=="Core"||parent_name=="Video"||parent_name=="Audio"||parent_name=="Input/Output"
-    ||parent_name=="System"||parent_name=="Savestate"||parent_name=="Miscellaneous")
+       ||parent_name=="System"||parent_name=="Savestate"||parent_name=="Miscellaneous")
         return true;
     return false;
 }
@@ -449,7 +661,6 @@ static jobjectArray j_get_vulkan_physical_dev_list(JNIEnv* env,jobject self){
         VkInstance inst;
         if (vkCreateInstance(&inst_create_info, nullptr, &inst)!= VK_SUCCESS) {
             __android_log_print(ANDROID_LOG_FATAL, LOG_TAG,"%s : %d",__func__,__LINE__);
-            aps3e_log.fatal("%s : %d",__func__,__LINE__);
         }
 
         // 获取物理设备数量
@@ -475,4 +686,44 @@ static jobjectArray j_get_vulkan_physical_dev_list(JNIEnv* env,jobject self){
         env->SetObjectArrayElement(ret,n++,env->NewStringUTF(prop.deviceName));
     }
     return ret;
+}
+
+/*
+static jboolean support_custom_driver(JNIEnv* env,jobject self){
+    return access("/dev/kgsl-3d0",F_OK)==0;
+}*/
+
+int register_aps3e_Emulator(JNIEnv* env){
+
+    static const JNINativeMethod methods[] = {
+
+            {"get_cpu_core_count", "()I",(void *)j_get_cpu_core_count},
+            {"get_cpu_name", "(I)Ljava/lang/String;",(void *)j_get_cpu_name},
+            {"get_cpu_max_mhz", "(I)I",(void *)j_get_cpu_max_mhz},
+            {"simple_device_info", "()Ljava/lang/String;",(void *)j_simple_device_info},
+            {"get_native_llvm_cpu_list", "()[Ljava/lang/String;",(void *)j_get_native_llvm_cpu_list},
+            {"get_support_llvm_cpu_list", "()[Ljava/lang/String;",(void *)j_get_support_llvm_cpu_list},
+            {"get_vulkan_physical_dev_list", "()[Ljava/lang/String;",(void *)j_get_vulkan_physical_dev_list},
+
+            //{"support_custom_driver","()Z",(void *)support_custom_driver},
+
+            { "generate_config_xml", "()Ljava/lang/String;", (void *) generate_config_xml },
+            {"generate_strings_xml","()Ljava/lang/String;", (void *)generate_strings_xml},
+            {"generate_java_string_arr","()Ljava/lang/String;", (void *)generate_java_string_arr},
+
+            { "install_firmware", "(I)Z", (void *) j_install_firmware },
+            //{ "meta_info_from_iso","(Ljava/lang/String;)Laenu/aps3e/Emulator$MetaInfo;",(void*)MetaInfo_from_iso},
+            { "meta_info_from_dir","(Ljava/lang/String;)Laenu/aps3e/Emulator$MetaInfo;",(void*)j_meta_info_from_dir},
+
+            { "meta_info_from_iso","(ILjava/lang/String;)Laenu/aps3e/Emulator$MetaInfo;",(void*)j_meta_info_from_iso},
+
+            { "setup_game_id", "(Ljava/lang/String;)V", (void *) j_setup_game_id },
+            {"install_edat", "(I)Z", (void *) j_install_edat},
+            { "install_pkg", "(I)Z", (void *) j_install_pkg },
+
+    };
+
+    jclass clazz = env->FindClass("aenu/aps3e/Emulator");
+    return env->RegisterNatives(clazz,methods, sizeof(methods)/sizeof(methods[0]));
+
 }

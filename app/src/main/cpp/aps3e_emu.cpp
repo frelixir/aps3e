@@ -1,10 +1,17 @@
 // SPDX-License-Identifier: GPL-2.0-only
-
+#include "aps3e_rp3_impl.h"
 #include "emulator.h"
+#include "emulator_aps3e.h"
+#include "vkapi.h"
+#include "vkutil.h"
+LOG_CHANNEL(aps3e_log);
+LOG_CHANNEL(sys_log, "SYS");
+
 namespace ae{
 
     int boot_type;
 
+    std::string boot_game_uri;//不使用
     std::string boot_game_path;
     int boot_game_fd;
 
@@ -275,7 +282,7 @@ namespace ae{
             bool result=true;
             if(pkgs[0][0]==':') {
                 for(const auto& pkg : pkgs){
-                    if(!aps3e_util::install_pkg(*Emu.GetIsoFs(),pkg)){
+                    if(!ae::install_pkg(*Emu.GetIsoFs(),pkg)){
                         result=false;
                     }
                 }
@@ -283,7 +290,7 @@ namespace ae{
             else{
                 for (const auto& pkg : pkgs)
                 {
-                    if(!aps3e_util::install_pkg(pkg.c_str())){
+                    if(!ae::install_pkg(pkg.c_str())){
                         result=false;
                     }
                 }
@@ -430,7 +437,7 @@ namespace ae{
         callbacks.get_localized_string    = [](localized_string_id id, const char* args) -> std::string {
             PRE("get_localized_string");
 
-            std::string str = localized_strings[static_cast<size_t>(id)];
+            std::string str = ::localized_strings[static_cast<size_t>(id)];
             if(auto it=str.find("%0");it!=std::string::npos) {
                 str.replace(it, 2, args);
             }
@@ -522,4 +529,350 @@ namespace ae{
             return error==game_boot_result::no_errors;
         }//);
     }
+
+    //----------------------------------------------
+    //util
+
+    bool install_firmware(int fd){
+        fs::file pup_f=fs::file::from_fd(fd);
+        if (!pup_f)
+        {
+            //LOGE("Error opening PUP file %s (%s)", path);
+            LOGE("Firmware installation failed: The selected firmware file couldn't be opened.");
+            return false;
+        }
+
+        pup_object pup(std::move(pup_f));
+
+        switch (pup.operator pup_error())
+        {
+            case pup_error::header_read:
+            {
+                LOGE("%s", pup.get_formatted_error().data());
+                LOGE("Firmware installation failed: The provided file is empty.");
+                return false;
+            }
+            case pup_error::header_magic:
+            {
+                LOGE("Error while installing firmware: provided file is not a PUP file.");
+                LOGE("Firmware installation failed: The provided file is not a PUP file.");
+                return false;
+            }
+            case pup_error::expected_size:
+            {
+                LOGE("%s", pup.get_formatted_error().data());
+                LOGE("Firmware installation failed: The provided file is incomplete. Try redownloading it.");
+                return false;
+            }
+            case pup_error::header_file_count:
+            case pup_error::file_entries:
+            case pup_error::stream:
+            {
+                std::string error = "Error while installing firmware: PUP file is invalid.";
+
+                if (!pup.get_formatted_error().empty())
+                {
+                    fmt::append(error, "\n%s", pup.get_formatted_error().data());
+                }
+
+                LOGE("%s", error.data());
+                LOGE("Firmware installation failed: The provided file is corrupted.");
+                return false;
+            }
+            case pup_error::hash_mismatch:
+            {
+                LOGE("Error while installing firmware: Hash check failed.");
+                LOGE("Firmware installation failed: The provided file's contents are corrupted.");
+                return false;
+            }
+            case pup_error::ok: break;
+        }
+
+        fs::file update_files_f = pup.get_file(0x300);
+
+        const usz update_files_size = update_files_f ? update_files_f.size() : 0;
+
+        if (!update_files_size)
+        {
+            LOGE("Error while installing firmware: Couldn't find installation packages database.");
+            LOGE("Firmware installation failed: The provided file's contents are corrupted.");
+            return false;
+        }
+
+        fs::device_stat dev_stat{};
+        if (!fs::statfs(g_cfg_vfs.get_dev_flash(), dev_stat))
+        {
+            LOGE("Error while installing firmware: Couldn't retrieve available disk space. ('%s')", g_cfg_vfs.get_dev_flash().data());
+            LOGE("Firmware installation failed: Couldn't retrieve available disk space.");
+            return false;
+        }
+
+        if (dev_stat.avail_free < update_files_size)
+        {
+            LOGE("Error while installing firmware: Out of disk space. ('%s', needed: %d bytes)", g_cfg_vfs.get_dev_flash().data(), update_files_size - dev_stat.avail_free);
+            LOGE("Firmware installation failed: Out of disk space.");
+            return false;
+        }
+
+        tar_object update_files(update_files_f);
+
+        auto update_filenames = update_files.get_filenames();
+
+        update_filenames.erase(std::remove_if(
+                                       update_filenames.begin(), update_filenames.end(), [](const std::string& s) { return s.find("dev_flash_") == umax; }),
+                               update_filenames.end());
+
+        if (update_filenames.empty())
+        {
+            LOGE("Error while installing firmware: No dev_flash_* packages were found.");
+            LOGE("Firmware installation failed: The provided file's contents are corrupted.");
+            return false;
+        }
+
+        static constexpr std::string_view cur_version = "4.91";
+
+        std::string version_string;
+
+        if (fs::file version = pup.get_file(0x100))
+        {
+            version_string = version.to_string();
+        }
+
+        if (const usz version_pos = version_string.find('\n'); version_pos != umax)
+        {
+            version_string.erase(version_pos);
+        }
+
+        if (version_string.empty())
+        {
+            LOGE("Error while installing firmware: No version data was found.");
+            LOGE("Firmware installation failed: The provided file's contents are corrupted.");
+            return false;
+        }
+
+        LOGI("FIRMWARD VER %s",version_string.data());
+
+        if (std::string installed = utils::get_firmware_version(); !installed.empty())
+        {
+            LOGW("Reinstalling firmware: old=%s, new=%s", installed.data(), version_string.data());
+        }
+
+        // Used by tar_object::extract() as destination directory
+        g_fxo->reset();
+        //g_cfg_vfs.from_default();
+
+        vfs::mount("/dev_flash", g_cfg_vfs.get_dev_flash());
+
+        for (const auto& update_filename : update_filenames)
+        {
+            auto update_file_stream = update_files.get_file(update_filename);
+
+            if (update_file_stream->m_file_handler)
+            {
+                // Forcefully read all the data
+                update_file_stream->m_file_handler->handle_file_op(*update_file_stream, 0, update_file_stream->get_size(umax), nullptr);
+            }
+
+            fs::file update_file = fs::make_stream(std::move(update_file_stream->data));
+
+            SCEDecrypter self_dec(update_file);
+            self_dec.LoadHeaders();
+            self_dec.LoadMetadata(SCEPKG_ERK, SCEPKG_RIV);
+            self_dec.DecryptData();
+
+            auto dev_flash_tar_f = self_dec.MakeFile();
+            if (dev_flash_tar_f.size() < 3)
+            {
+                LOGE("Error while installing firmware: PUP contents are invalid.");
+                LOGE("Firmware installation failed: Firmware could not be decompressed");
+                //progress = -1;
+                return false;
+            }
+
+            tar_object dev_flash_tar(dev_flash_tar_f[2]);
+            if (!dev_flash_tar.extract())
+            {
+                LOGE("Error while installing firmware: TAR contents are invalid. (package=%s)", update_filename.data());
+                LOGE("The firmware contents could not be extracted."
+                     "\nThis is very likely caused by external interference from a faulty anti-virus software."
+                     "\nPlease add RPCS3 to your anti-virus\' whitelist or use better anti-virus software.");
+
+                //progress = -1;
+                return false;
+            }
+        }
+        update_files_f.close();
+        LOGW("install_firmware ok");
+        return true;
+    }
+
+    bool install_pkg(iso_fs& iso_fs, const std::string& path){
+
+        std::deque<package_reader> readers;
+        readers.emplace_back(iso_fs, path);
+
+        std::deque<std::string> bootable_paths;
+
+        package_install_result result = package_reader::extract_data(readers, bootable_paths);
+        LOGW("install_pkg %d %s %s",result.error,result.version.expected.c_str(),result.version.found.c_str());
+        return result.error == package_install_result::error_type::no_error;
+    }
+
+    bool install_pkg(const char* path){
+        std::deque<package_reader> readers;
+        readers.emplace_back(std::string(path));
+
+        std::deque<std::string> bootable_paths;
+
+        package_install_result result = package_reader::extract_data(readers, bootable_paths);
+        LOGW("install_pkg %d %s %s",result.error,result.version.expected.c_str(),result.version.found.c_str());
+        return result.error == package_install_result::error_type::no_error;
+
+    }
+    bool install_pkg(int pkg_fd){
+        std::deque<package_reader> readers;
+        readers.emplace_back(fs::file::from_fd(pkg_fd));
+
+        std::deque<std::string> bootable_paths;
+
+        package_install_result result = package_reader::extract_data(readers, bootable_paths);
+        LOGW("install_pkg %d %s %s",result.error,result.version.expected.c_str(),result.version.found.c_str());
+        return result.error == package_install_result::error_type::no_error;
+
+    }
+
+    bool allow_eboot_decrypt(const fs::file& eboot_file){
+        fs::file dec_eboot = decrypt_self(eboot_file);
+        return dec_eboot?true:false;
+    }
+
+    bool install_edat(const fs::file& edat_f) {
+        NPD_HEADER npd_header;
+        EDAT_HEADER unused;
+
+        if (edat_f.size() < 0x90) {
+            LOGE("EDAT file is too small");
+            return false;
+        }
+        read_npd_edat_header(&edat_f, npd_header, unused);
+        if (memcmp(&npd_header.magic, "NPD\0", 4) != 0) {
+            LOGE("Invalid NPD header");
+            return false;
+        }
+        std::vector<uint8_t> edat_data(edat_f.size());
+        edat_f.seek(0);
+        edat_f.read(edat_data.data(), edat_data.size());
+
+        const std::string user_id = "00000001";
+        std::string edat_save_path = std::format("{}dev_hdd0/home/{}/exdata/{}.edat",
+                                                 fs::get_config_dir(), user_id,
+                                                 npd_header.content_id);
+        //LOGI("Writing EDAT file to %s",edat_save_path.c_str());
+        if (!fs::write_file(edat_save_path, fs::open_mode::create + fs::open_mode::trunc,
+                            edat_data)) {
+            LOGE("Failed to write EDAT file");
+            return false;
+        }
+        return true;
+    }
+
+
+    std::pair<std::string,bool> vk_lib_info(){
+        const std::pair<std::string,bool> dedault_info={"libvulkan.so",false};
+        const char* cfg_path=getenv("APS3E_GLOBAL_CONFIG_YAML_PATH");
+        if(!cfg_path)
+            return dedault_info;
+        if(!std::filesystem::exists(cfg_path))
+            return dedault_info;
+
+        YAML::Node config_node = YAML::LoadFile(cfg_path);
+        if(!config_node.IsDefined())
+            return dedault_info;
+        YAML::Node use_custom_driver=config_node["Video"]["Vulkan"]["Use Custom Driver"];
+        if(!use_custom_driver.IsDefined())
+            return dedault_info;
+        if(!use_custom_driver.as<bool>())
+            return dedault_info;
+
+        YAML::Node custom_lib_path=config_node["Video"]["Vulkan"]["Custom Driver Library Path"];
+        if(!custom_lib_path.IsDefined())
+            return dedault_info;
+        std::string custom_lib_path_str=custom_lib_path.as<std::string>();
+        if(custom_lib_path_str.empty()||!std::filesystem::exists(custom_lib_path_str))
+            return dedault_info;
+        return {custom_lib_path_str,true};
+    }
+
+    std::string get_gpu_info(){
+        std::pair<std::string,bool> lib_info=vk_lib_info();
+        vk_load(lib_info.first.c_str(),lib_info.second);
+
+        struct clean_t{
+            std::vector<std::function<void()>> funcs;
+            ~clean_t(){
+                for(auto it=funcs.rbegin();it!=funcs.rend();it++){
+                    (*it)();
+                }
+            }
+        }clean;
+
+        clean.funcs.push_back([](){
+            vk_unload();
+        });
+
+        std::optional<VkInstance> inst=vk_create_instance("aps3e-gpu_info");
+        if(!inst) {
+            return "获取gpu信息失败";
+        }
+
+        clean.funcs.push_back([=](){
+            vk_destroy_instance(*inst);
+        });
+
+        if(int count=vk_get_physical_device_count(*inst);count!=1) {
+
+            if(count<1){
+                return "获取gpu信息失败";
+            }
+            if(count>1){
+                return "多个gpu!";
+            }
+        }
+        if(auto pdev=vk_get_physical_device(*inst);pdev) {
+            std::string gpu_name=vk_get_physical_device_properties(*pdev).deviceName;
+            std::string gpu_vk_ver=[](uint32_t v) {
+                std::ostringstream oss;
+                oss << (v >> 22) << "." << ((v >> 12) & 0x3ff) << "." << (v & 0xfff);
+                return oss.str();
+            }(vk_get_physical_device_properties(*pdev).apiVersion);
+
+            std::string gpu_ext=[&]() {
+                std::ostringstream oss;
+                for (auto ext : vk_get_physical_device_extension_properties(*pdev)) {
+                    oss <<"    * " << ext.extensionName << "\n";
+                }
+                return oss.str();
+            }();
+
+            return "GPU [" + gpu_name +"(Vulkan: "+gpu_vk_ver+ ")]:\n" + gpu_ext;
+
+        }
+        return "获取gpu信息失败";
+
+    }
+
+    std::string get_cpu_info() {
+
+        std::vector<core_info_t> core_info=cpu_get_core_info();
+        std::string cpu_name=cpu_get_simple_info(core_info);
+        std::string cpu_features=[&](){
+            std::ostringstream oss;
+            for(const auto& feature : core_info[0].features){
+                oss <<"    * " << feature << "\n";
+            }
+            return oss.str();
+        }();
+        return "CPU [" + cpu_name + "]:\n" + cpu_features;
+    }
+
 }
