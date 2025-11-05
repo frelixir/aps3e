@@ -11,8 +11,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/aadec.c
         ${FFMPEG_DIR}/libavformat/aaxdec.c
         ${FFMPEG_DIR}/libavformat/ac3dec.c
-        ${FFMPEG_DIR}/libavformat/ac4dec.c
-        ${FFMPEG_DIR}/libavformat/ac4enc.c
         ${FFMPEG_DIR}/libavformat/acedec.c
         ${FFMPEG_DIR}/libavformat/acm.c
         ${FFMPEG_DIR}/libavformat/act.c
@@ -20,8 +18,7 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/ads.c
         ${FFMPEG_DIR}/libavformat/adtsenc.c
         ${FFMPEG_DIR}/libavformat/adxdec.c
-        ${FFMPEG_DIR}/libavformat/aeadec.c
-        ${FFMPEG_DIR}/libavformat/aeaenc.c
+        ${FFMPEG_DIR}/libavformat/aea.c
         ${FFMPEG_DIR}/libavformat/afc.c
         ${FFMPEG_DIR}/libavformat/aiff.c
         ${FFMPEG_DIR}/libavformat/aiffdec.c
@@ -32,7 +29,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/amr.c
         ${FFMPEG_DIR}/libavformat/amvenc.c
         ${FFMPEG_DIR}/libavformat/anm.c
-        ${FFMPEG_DIR}/libavformat/apac.c
         ${FFMPEG_DIR}/libavformat/apc.c
         ${FFMPEG_DIR}/libavformat/ape.c
         ${FFMPEG_DIR}/libavformat/apetag.c
@@ -78,7 +74,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/bit.c
         ${FFMPEG_DIR}/libavformat/bmv.c
         ${FFMPEG_DIR}/libavformat/boadec.c
-        ${FFMPEG_DIR}/libavformat/bonk.c
         ${FFMPEG_DIR}/libavformat/brstm.c
         ${FFMPEG_DIR}/libavformat/c93.c
         ${FFMPEG_DIR}/libavformat/cache.c
@@ -123,11 +118,10 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/eacdata.c
         ${FFMPEG_DIR}/libavformat/electronicarts.c
         ${FFMPEG_DIR}/libavformat/epafdec.c
-        ${FFMPEG_DIR}/libavformat/evc.c
-        ${FFMPEG_DIR}/libavformat/evcdec.c
         ${FFMPEG_DIR}/libavformat/ffmetadec.c
         ${FFMPEG_DIR}/libavformat/ffmetaenc.c
         ${FFMPEG_DIR}/libavformat/fifo.c
+        ${FFMPEG_DIR}/libavformat/fifo_test.c
         ${FFMPEG_DIR}/libavformat/file.c
         ${FFMPEG_DIR}/libavformat/filmstripdec.c
         ${FFMPEG_DIR}/libavformat/filmstripenc.c
@@ -176,12 +170,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/hnm.c
         ${FFMPEG_DIR}/libavformat/http.c
         ${FFMPEG_DIR}/libavformat/httpauth.c
-        ${FFMPEG_DIR}/libavformat/iamf.c
-        ${FFMPEG_DIR}/libavformat/iamf_parse.c
-        ${FFMPEG_DIR}/libavformat/iamf_reader.c
-        ${FFMPEG_DIR}/libavformat/iamf_writer.c
-        ${FFMPEG_DIR}/libavformat/iamfdec.c
-        ${FFMPEG_DIR}/libavformat/iamfenc.c
         ${FFMPEG_DIR}/libavformat/icecast.c
         ${FFMPEG_DIR}/libavformat/icodec.c
         ${FFMPEG_DIR}/libavformat/icoenc.c
@@ -215,12 +203,10 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/ivfenc.c
         ${FFMPEG_DIR}/libavformat/jacosubdec.c
         ${FFMPEG_DIR}/libavformat/jacosubenc.c
-        ${FFMPEG_DIR}/libavformat/jpegxl_anim_dec.c
+        ${FFMPEG_DIR}/libavformat/jpegxl_probe.c
         ${FFMPEG_DIR}/libavformat/jvdec.c
         ${FFMPEG_DIR}/libavformat/kvag.c
-        ${FFMPEG_DIR}/libavformat/lafdec.c
         ${FFMPEG_DIR}/libavformat/latmenc.c
-        ${FFMPEG_DIR}/libavformat/lc3.c
         ${FFMPEG_DIR}/libavformat/lmlm4.c
         ${FFMPEG_DIR}/libavformat/loasdec.c
         ${FFMPEG_DIR}/libavformat/lrc.c
@@ -285,7 +271,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/mxfdec.c
         ${FFMPEG_DIR}/libavformat/mxfenc.c
         ${FFMPEG_DIR}/libavformat/mxg.c
-        ${FFMPEG_DIR}/libavformat/nal.c
         ${FFMPEG_DIR}/libavformat/ncdec.c
         ${FFMPEG_DIR}/libavformat/network.c
         ${FFMPEG_DIR}/libavformat/nistspheredec.c
@@ -313,12 +298,10 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/omaenc.c
         ${FFMPEG_DIR}/libavformat/options.c
         ${FFMPEG_DIR}/libavformat/os_support.c
-        ${FFMPEG_DIR}/libavformat/osq.c
         ${FFMPEG_DIR}/libavformat/paf.c
         ${FFMPEG_DIR}/libavformat/pcm.c
         ${FFMPEG_DIR}/libavformat/pcmdec.c
         ${FFMPEG_DIR}/libavformat/pcmenc.c
-        ${FFMPEG_DIR}/libavformat/pdvdec.c
         ${FFMPEG_DIR}/libavformat/pjsdec.c
         ${FFMPEG_DIR}/libavformat/pmpdec.c
         ${FFMPEG_DIR}/libavformat/pp_bnk.c
@@ -328,15 +311,12 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/pva.c
         ${FFMPEG_DIR}/libavformat/pvfdec.c
         ${FFMPEG_DIR}/libavformat/qcp.c
-        ${FFMPEG_DIR}/libavformat/qoadec.c
         ${FFMPEG_DIR}/libavformat/qtpalette.c
         ${FFMPEG_DIR}/libavformat/r3d.c
         ${FFMPEG_DIR}/libavformat/rawdec.c
         ${FFMPEG_DIR}/libavformat/rawenc.c
         ${FFMPEG_DIR}/libavformat/rawutils.c
         ${FFMPEG_DIR}/libavformat/rawvideodec.c
-        ${FFMPEG_DIR}/libavformat/rcwtdec.c
-        ${FFMPEG_DIR}/libavformat/rcwtenc.c
         ${FFMPEG_DIR}/libavformat/rdt.c
         ${FFMPEG_DIR}/libavformat/realtextdec.c
         ${FFMPEG_DIR}/libavformat/redspark.c
@@ -344,7 +324,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/riff.c
         ${FFMPEG_DIR}/libavformat/riffdec.c
         ${FFMPEG_DIR}/libavformat/riffenc.c
-        ${FFMPEG_DIR}/libavformat/rka.c
         ${FFMPEG_DIR}/libavformat/rl2.c
         ${FFMPEG_DIR}/libavformat/rm.c
         ${FFMPEG_DIR}/libavformat/rmdec.c
@@ -418,7 +397,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/sccdec.c
         ${FFMPEG_DIR}/libavformat/sccenc.c
         ${FFMPEG_DIR}/libavformat/scd.c
-        ${FFMPEG_DIR}/libavformat/sdns.c
         ${FFMPEG_DIR}/libavformat/sdp.c
         ${FFMPEG_DIR}/libavformat/sdr2.c
         ${FFMPEG_DIR}/libavformat/sdsdec.c
@@ -480,7 +458,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/unix.c
         ${FFMPEG_DIR}/libavformat/url.c
         ${FFMPEG_DIR}/libavformat/urldecode.c
-        ${FFMPEG_DIR}/libavformat/usmdec.c
         ${FFMPEG_DIR}/libavformat/utils.c
         ${FFMPEG_DIR}/libavformat/vag.c
         ${FFMPEG_DIR}/libavformat/vc1dec.c
@@ -498,11 +475,7 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/vpk.c
         ${FFMPEG_DIR}/libavformat/vplayerdec.c
         ${FFMPEG_DIR}/libavformat/vqf.c
-        ${FFMPEG_DIR}/libavformat/vvc.c
-        ${FFMPEG_DIR}/libavformat/vvcdec.c
         ${FFMPEG_DIR}/libavformat/w64.c
-        ${FFMPEG_DIR}/libavformat/wady.c
-        ${FFMPEG_DIR}/libavformat/wavarc.c
         ${FFMPEG_DIR}/libavformat/wavdec.c
         ${FFMPEG_DIR}/libavformat/wavenc.c
         ${FFMPEG_DIR}/libavformat/wc3movie.c
@@ -523,7 +496,6 @@ add_library(libavformat STATIC
         ${FFMPEG_DIR}/libavformat/wvedec.c
         ${FFMPEG_DIR}/libavformat/wvenc.c
         ${FFMPEG_DIR}/libavformat/xa.c
-        ${FFMPEG_DIR}/libavformat/xmd.c
         ${FFMPEG_DIR}/libavformat/xmv.c
         ${FFMPEG_DIR}/libavformat/xvag.c
         ${FFMPEG_DIR}/libavformat/xwma.c

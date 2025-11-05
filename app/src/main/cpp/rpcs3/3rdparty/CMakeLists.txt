@@ -291,7 +291,7 @@ elseif(ANDROID)
 			libavutil
 	)
 	target_include_directories(3rdparty_ffmpeg INTERFACE
-			${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg/ffmpeg-7.1.2
+			${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg/ffmpeg-5.1.7
 			${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg/include/android_aarch64
 	)
 else()

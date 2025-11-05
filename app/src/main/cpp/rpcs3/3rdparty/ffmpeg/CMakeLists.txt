@@ -1,5 +1,5 @@
 
-set(FFMPEG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg-7.1.2")
+set(FFMPEG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg-5.1.7")
 set(FFMPEG_INC "${CMAKE_CURRENT_SOURCE_DIR}/include/android_aarch64")
 
 add_subdirectory(libavdevice EXCLUDE_FROM_ALL)

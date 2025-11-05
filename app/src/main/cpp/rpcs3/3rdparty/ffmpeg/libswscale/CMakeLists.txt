@@ -4,9 +4,15 @@ project(libswscale LANGUAGES C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 
 add_library(libswscale STATIC
+        ${FFMPEG_DIR}/libswscale/aarch64/hscale.S
+        ${FFMPEG_DIR}/libswscale/aarch64/output.S
+        ${FFMPEG_DIR}/libswscale/aarch64/rgb2rgb.c
+        ${FFMPEG_DIR}/libswscale/aarch64/rgb2rgb_neon.S
+        ${FFMPEG_DIR}/libswscale/aarch64/swscale.c
+        ${FFMPEG_DIR}/libswscale/aarch64/swscale_unscaled.c
+        ${FFMPEG_DIR}/libswscale/aarch64/yuv2rgb_neon.S
         ${FFMPEG_DIR}/libswscale/alphablend.c
         ${FFMPEG_DIR}/libswscale/gamma.c
-        ${FFMPEG_DIR}/libswscale/half2float.c
         ${FFMPEG_DIR}/libswscale/hscale.c
         ${FFMPEG_DIR}/libswscale/hscale_fast_bilinear.c
         ${FFMPEG_DIR}/libswscale/input.c
@@ -20,16 +26,6 @@ add_library(libswscale STATIC
         ${FFMPEG_DIR}/libswscale/version.c
         ${FFMPEG_DIR}/libswscale/vscale.c
         ${FFMPEG_DIR}/libswscale/yuv2rgb.c
-        ${FFMPEG_DIR}/libswscale/aarch64/hscale.S
-        ${FFMPEG_DIR}/libswscale/aarch64/input.S
-        ${FFMPEG_DIR}/libswscale/aarch64/output.S
-        ${FFMPEG_DIR}/libswscale/aarch64/range_convert_neon.S
-        ${FFMPEG_DIR}/libswscale/aarch64/rgb2rgb.c
-        ${FFMPEG_DIR}/libswscale/aarch64/rgb2rgb_neon.S
-        ${FFMPEG_DIR}/libswscale/aarch64/swscale.c
-        ${FFMPEG_DIR}/libswscale/aarch64/swscale_unscaled.c
-        ${FFMPEG_DIR}/libswscale/aarch64/swscale_unscaled_neon.S
-        ${FFMPEG_DIR}/libswscale/aarch64/yuv2rgb_neon.S
 )
 
 target_include_directories(libswscale PRIVATE

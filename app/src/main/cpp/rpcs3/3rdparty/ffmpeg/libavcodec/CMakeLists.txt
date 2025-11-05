@@ -10,8 +10,11 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/8svx.c
         ${FFMPEG_DIR}/libavcodec/a64multienc.c
         ${FFMPEG_DIR}/libavcodec/aac_ac3_parser.c
+        ${FFMPEG_DIR}/libavcodec/aac_adtstoasc_bsf.c
         ${FFMPEG_DIR}/libavcodec/aac_parser.c
         ${FFMPEG_DIR}/libavcodec/aaccoder.c
+        ${FFMPEG_DIR}/libavcodec/aacdec.c
+        ${FFMPEG_DIR}/libavcodec/aacdec_fixed.c
         ${FFMPEG_DIR}/libavcodec/aacenc.c
         ${FFMPEG_DIR}/libavcodec/aacenc_is.c
         ${FFMPEG_DIR}/libavcodec/aacenc_ltp.c
@@ -28,6 +31,62 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/aacsbr_fixed.c
         ${FFMPEG_DIR}/libavcodec/aactab.c
         ${FFMPEG_DIR}/libavcodec/aandcttab.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/aacpsdsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/aacpsdsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/fft_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/fft_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/fmtconvert_init.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/fmtconvert_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264chroma_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264cmc_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264dsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264dsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264idct_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264pred_init.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264pred_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264qpel_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/h264qpel_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/hevcdsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/hevcdsp_idct_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/hevcdsp_sao_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/hpeldsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/hpeldsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/idctdsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/idctdsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/me_cmp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/me_cmp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/mdct_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/mpegaudiodsp_init.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/mpegaudiodsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/opusdsp_init.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/opusdsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/pixblockdsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/pixblockdsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/rv40dsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/sbrdsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/sbrdsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/simple_idct_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/synth_filter_init.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/synth_filter_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vc1dsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/vc1dsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/videodsp_init.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/videodsp.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vorbisdsp_init.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/vorbisdsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp8dsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp8dsp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9dsp_init_10bpp_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9dsp_init_12bpp_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9dsp_init_16bpp_aarch64_template.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9dsp_init_aarch64.c
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9itxfm_16bpp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9itxfm_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9lpf_16bpp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9lpf_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9mc_16bpp_neon.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9mc_aarch64.S
+        ${FFMPEG_DIR}/libavcodec/aarch64/vp9mc_neon.S
         ${FFMPEG_DIR}/libavcodec/aasc.c
         ${FFMPEG_DIR}/libavcodec/ac3.c
         ${FFMPEG_DIR}/libavcodec/ac3_channel_layout_tab.c
@@ -67,8 +126,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/amrwbdec.c
         ${FFMPEG_DIR}/libavcodec/anm.c
         ${FFMPEG_DIR}/libavcodec/ansi.c
-        ${FFMPEG_DIR}/libavcodec/aom_film_grain.c
-        ${FFMPEG_DIR}/libavcodec/apac.c
         ${FFMPEG_DIR}/libavcodec/apedec.c
         ${FFMPEG_DIR}/libavcodec/aptx.c
         ${FFMPEG_DIR}/libavcodec/aptxdec.c
@@ -93,12 +150,16 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/audio_frame_queue.c
         ${FFMPEG_DIR}/libavcodec/audiodsp.c
         ${FFMPEG_DIR}/libavcodec/aura.c
+        ${FFMPEG_DIR}/libavcodec/av1_frame_merge_bsf.c
+        ${FFMPEG_DIR}/libavcodec/av1_frame_split_bsf.c
+        ${FFMPEG_DIR}/libavcodec/av1_metadata_bsf.c
         ${FFMPEG_DIR}/libavcodec/av1_parse.c
         ${FFMPEG_DIR}/libavcodec/av1_parser.c
         ${FFMPEG_DIR}/libavcodec/av1dec.c
         ${FFMPEG_DIR}/libavcodec/avcodec.c
         ${FFMPEG_DIR}/libavcodec/avdct.c
         ${FFMPEG_DIR}/libavcodec/avfft.c
+        ${FFMPEG_DIR}/libavcodec/avpacket.c
         ${FFMPEG_DIR}/libavcodec/avrndec.c
         ${FFMPEG_DIR}/libavcodec/avs.c
         ${FFMPEG_DIR}/libavcodec/avs2.c
@@ -123,7 +184,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/bmpenc.c
         ${FFMPEG_DIR}/libavcodec/bmvaudio.c
         ${FFMPEG_DIR}/libavcodec/bmvvideo.c
-        ${FFMPEG_DIR}/libavcodec/bonk.c
         ${FFMPEG_DIR}/libavcodec/brenderpix.c
         ${FFMPEG_DIR}/libavcodec/bsf.c
         ${FFMPEG_DIR}/libavcodec/bswapdsp.c
@@ -143,7 +203,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/cbs_h2645.c
         ${FFMPEG_DIR}/libavcodec/cbs_mpeg2.c
         ${FFMPEG_DIR}/libavcodec/cbs_sei.c
-        ${FFMPEG_DIR}/libavcodec/cbs_vp8.c
         ${FFMPEG_DIR}/libavcodec/cbs_vp9.c
         ${FFMPEG_DIR}/libavcodec/ccaption_dec.c
         ${FFMPEG_DIR}/libavcodec/cdgraphics.c
@@ -157,6 +216,7 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/cfhdenc.c
         ${FFMPEG_DIR}/libavcodec/cfhdencdsp.c
         ${FFMPEG_DIR}/libavcodec/cga_data.c
+        ${FFMPEG_DIR}/libavcodec/chomp_bsf.c
         ${FFMPEG_DIR}/libavcodec/cinepak.c
         ${FFMPEG_DIR}/libavcodec/cinepakenc.c
         ${FFMPEG_DIR}/libavcodec/clearvideo.c
@@ -167,7 +227,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/cngenc.c
         ${FFMPEG_DIR}/libavcodec/codec_desc.c
         ${FFMPEG_DIR}/libavcodec/codec_par.c
-        ${FFMPEG_DIR}/libavcodec/container_fifo.c
         ${FFMPEG_DIR}/libavcodec/cook.c
         ${FFMPEG_DIR}/libavcodec/cook_parser.c
         ${FFMPEG_DIR}/libavcodec/cpia.c
@@ -178,6 +237,7 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/d3d11va.c
         ${FFMPEG_DIR}/libavcodec/dca.c
         ${FFMPEG_DIR}/libavcodec/dca_core.c
+        ${FFMPEG_DIR}/libavcodec/dca_core_bsf.c
         ${FFMPEG_DIR}/libavcodec/dca_exss.c
         ${FFMPEG_DIR}/libavcodec/dca_lbr.c
         ${FFMPEG_DIR}/libavcodec/dca_parser.c
@@ -190,6 +250,7 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/dcadsp.c
         ${FFMPEG_DIR}/libavcodec/dcaenc.c
         ${FFMPEG_DIR}/libavcodec/dcahuff.c
+        ${FFMPEG_DIR}/libavcodec/dct.c
         ${FFMPEG_DIR}/libavcodec/dct32_fixed.c
         ${FFMPEG_DIR}/libavcodec/dct32_float.c
         ${FFMPEG_DIR}/libavcodec/dds.c
@@ -213,8 +274,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/dolby_e_parse.c
         ${FFMPEG_DIR}/libavcodec/dolby_e_parser.c
         ${FFMPEG_DIR}/libavcodec/dovi_rpu.c
-        ${FFMPEG_DIR}/libavcodec/dovi_rpudec.c
-        ${FFMPEG_DIR}/libavcodec/dovi_rpuenc.c
         ${FFMPEG_DIR}/libavcodec/dpcm.c
         ${FFMPEG_DIR}/libavcodec/dpx.c
         ${FFMPEG_DIR}/libavcodec/dpx_parser.c
@@ -225,7 +284,9 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/dsicinvideo.c
         ${FFMPEG_DIR}/libavcodec/dss_sp.c
         ${FFMPEG_DIR}/libavcodec/dstdec.c
+        ${FFMPEG_DIR}/libavcodec/dump_extradata_bsf.c
         ${FFMPEG_DIR}/libavcodec/dv.c
+        ${FFMPEG_DIR}/libavcodec/dv_error_marker_bsf.c
         ${FFMPEG_DIR}/libavcodec/dv_profile.c
         ${FFMPEG_DIR}/libavcodec/dvaudio_parser.c
         ${FFMPEG_DIR}/libavcodec/dvaudiodec.c
@@ -243,8 +304,9 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/dxa.c
         ${FFMPEG_DIR}/libavcodec/dxtory.c
         ${FFMPEG_DIR}/libavcodec/dxv.c
-        ${FFMPEG_DIR}/libavcodec/dxvenc.c
+        ${FFMPEG_DIR}/libavcodec/dynamic_hdr10_plus.c
         ${FFMPEG_DIR}/libavcodec/dynamic_hdr_vivid.c
+        ${FFMPEG_DIR}/libavcodec/eac3_core_bsf.c
         ${FFMPEG_DIR}/libavcodec/eac3_data.c
         ${FFMPEG_DIR}/libavcodec/eac3enc.c
         ${FFMPEG_DIR}/libavcodec/eacmv.c
@@ -259,24 +321,26 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/error_resilience.c
         ${FFMPEG_DIR}/libavcodec/escape124.c
         ${FFMPEG_DIR}/libavcodec/escape130.c
-        ${FFMPEG_DIR}/libavcodec/evc_parse.c
-        ${FFMPEG_DIR}/libavcodec/evc_parser.c
-        ${FFMPEG_DIR}/libavcodec/evc_ps.c
         ${FFMPEG_DIR}/libavcodec/evrcdec.c
         ${FFMPEG_DIR}/libavcodec/exif.c
         ${FFMPEG_DIR}/libavcodec/exr.c
         ${FFMPEG_DIR}/libavcodec/exrdsp.c
         ${FFMPEG_DIR}/libavcodec/exrenc.c
+        ${FFMPEG_DIR}/libavcodec/extract_extradata_bsf.c
         ${FFMPEG_DIR}/libavcodec/faandct.c
         ${FFMPEG_DIR}/libavcodec/faanidct.c
         ${FFMPEG_DIR}/libavcodec/fastaudio.c
         ${FFMPEG_DIR}/libavcodec/faxcompr.c
         ${FFMPEG_DIR}/libavcodec/fdctdsp.c
+        ${FFMPEG_DIR}/libavcodec/fft_fixed_32.c
+        ${FFMPEG_DIR}/libavcodec/fft_float.c
+        ${FFMPEG_DIR}/libavcodec/fft_init_table.c
         ${FFMPEG_DIR}/libavcodec/ffv1.c
         ${FFMPEG_DIR}/libavcodec/ffv1dec.c
         ${FFMPEG_DIR}/libavcodec/ffv1enc.c
         ${FFMPEG_DIR}/libavcodec/ffwavesynth.c
         ${FFMPEG_DIR}/libavcodec/fic.c
+        ${FFMPEG_DIR}/libavcodec/filter_units_bsf.c
         ${FFMPEG_DIR}/libavcodec/fits.c
         ${FFMPEG_DIR}/libavcodec/fitsdec.c
         ${FFMPEG_DIR}/libavcodec/fitsenc.c
@@ -286,12 +350,10 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/flacdec.c
         ${FFMPEG_DIR}/libavcodec/flacdsp.c
         ${FFMPEG_DIR}/libavcodec/flacenc.c
-        ${FFMPEG_DIR}/libavcodec/flacencdsp.c
         ${FFMPEG_DIR}/libavcodec/flashsv.c
         ${FFMPEG_DIR}/libavcodec/flashsv2enc.c
         ${FFMPEG_DIR}/libavcodec/flashsvenc.c
         ${FFMPEG_DIR}/libavcodec/flicvideo.c
-        ${FFMPEG_DIR}/libavcodec/float2half.c
         ${FFMPEG_DIR}/libavcodec/flvdec.c
         ${FFMPEG_DIR}/libavcodec/flvenc.c
         ${FFMPEG_DIR}/libavcodec/fmtconvert.c
@@ -299,8 +361,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/frame_thread_encoder.c
         ${FFMPEG_DIR}/libavcodec/fraps.c
         ${FFMPEG_DIR}/libavcodec/frwu.c
-        ${FFMPEG_DIR}/libavcodec/ftr.c
-        ${FFMPEG_DIR}/libavcodec/ftr_parser.c
         ${FFMPEG_DIR}/libavcodec/g2meet.c
         ${FFMPEG_DIR}/libavcodec/g722.c
         ${FFMPEG_DIR}/libavcodec/g722dec.c
@@ -335,19 +395,19 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/h263dec.c
         ${FFMPEG_DIR}/libavcodec/h263dsp.c
         ${FFMPEG_DIR}/libavcodec/h2645_parse.c
-        ${FFMPEG_DIR}/libavcodec/h2645_sei.c
-        ${FFMPEG_DIR}/libavcodec/h2645_vui.c
-        ${FFMPEG_DIR}/libavcodec/h2645data.c
         ${FFMPEG_DIR}/libavcodec/h264_cabac.c
         ${FFMPEG_DIR}/libavcodec/h264_cavlc.c
         ${FFMPEG_DIR}/libavcodec/h264_direct.c
         ${FFMPEG_DIR}/libavcodec/h264_levels.c
         ${FFMPEG_DIR}/libavcodec/h264_loopfilter.c
         ${FFMPEG_DIR}/libavcodec/h264_mb.c
+        ${FFMPEG_DIR}/libavcodec/h264_metadata_bsf.c
+        ${FFMPEG_DIR}/libavcodec/h264_mp4toannexb_bsf.c
         ${FFMPEG_DIR}/libavcodec/h264_parse.c
         ${FFMPEG_DIR}/libavcodec/h264_parser.c
         ${FFMPEG_DIR}/libavcodec/h264_picture.c
         ${FFMPEG_DIR}/libavcodec/h264_ps.c
+        ${FFMPEG_DIR}/libavcodec/h264_redundant_pps_bsf.c
         ${FFMPEG_DIR}/libavcodec/h264_refs.c
         ${FFMPEG_DIR}/libavcodec/h264_sei.c
         ${FFMPEG_DIR}/libavcodec/h264_slice.c
@@ -358,19 +418,31 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/h264idct.c
         ${FFMPEG_DIR}/libavcodec/h264pred.c
         ${FFMPEG_DIR}/libavcodec/h264qpel.c
+        ${FFMPEG_DIR}/libavcodec/h265_metadata_bsf.c
         ${FFMPEG_DIR}/libavcodec/h265_profile_level.c
         ${FFMPEG_DIR}/libavcodec/h274.c
-        ${FFMPEG_DIR}/libavcodec/half2float.c
         ${FFMPEG_DIR}/libavcodec/hap.c
         ${FFMPEG_DIR}/libavcodec/hapdec.c
+        ${FFMPEG_DIR}/libavcodec/hapqa_extract_bsf.c
         ${FFMPEG_DIR}/libavcodec/hcadec.c
         ${FFMPEG_DIR}/libavcodec/hcom.c
-        ${FFMPEG_DIR}/libavcodec/hdr_parser.c
-        ${FFMPEG_DIR}/libavcodec/hdrdec.c
-        ${FFMPEG_DIR}/libavcodec/hdrenc.c
+        ${FFMPEG_DIR}/libavcodec/hevc_cabac.c
+        ${FFMPEG_DIR}/libavcodec/hevc_data.c
+        ${FFMPEG_DIR}/libavcodec/hevc_filter.c
+        ${FFMPEG_DIR}/libavcodec/hevc_mp4toannexb_bsf.c
+        ${FFMPEG_DIR}/libavcodec/hevc_mvs.c
+        ${FFMPEG_DIR}/libavcodec/hevc_parse.c
+        ${FFMPEG_DIR}/libavcodec/hevc_parser.c
+        ${FFMPEG_DIR}/libavcodec/hevc_ps.c
+        ${FFMPEG_DIR}/libavcodec/hevc_refs.c
+        ${FFMPEG_DIR}/libavcodec/hevc_sei.c
+        ${FFMPEG_DIR}/libavcodec/hevcdec.c
+        ${FFMPEG_DIR}/libavcodec/hevcdsp.c
+        ${FFMPEG_DIR}/libavcodec/hevcpred.c
         ${FFMPEG_DIR}/libavcodec/hnm4video.c
         ${FFMPEG_DIR}/libavcodec/hpeldsp.c
         ${FFMPEG_DIR}/libavcodec/hq_hqa.c
+        ${FFMPEG_DIR}/libavcodec/hq_hqadata.c
         ${FFMPEG_DIR}/libavcodec/hq_hqadsp.c
         ${FFMPEG_DIR}/libavcodec/hqx.c
         ${FFMPEG_DIR}/libavcodec/hqxdsp.c
@@ -392,6 +464,7 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/imm4.c
         ${FFMPEG_DIR}/libavcodec/imm5.c
         ${FFMPEG_DIR}/libavcodec/imx.c
+        ${FFMPEG_DIR}/libavcodec/imx_dump_header_bsf.c
         ${FFMPEG_DIR}/libavcodec/indeo2.c
         ${FFMPEG_DIR}/libavcodec/indeo3.c
         ${FFMPEG_DIR}/libavcodec/indeo4.c
@@ -416,14 +489,10 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/jpeg2000dec.c
         ${FFMPEG_DIR}/libavcodec/jpeg2000dsp.c
         ${FFMPEG_DIR}/libavcodec/jpeg2000dwt.c
-        ${FFMPEG_DIR}/libavcodec/jpeg2000htdec.c
         ${FFMPEG_DIR}/libavcodec/jpegls.c
         ${FFMPEG_DIR}/libavcodec/jpeglsdec.c
         ${FFMPEG_DIR}/libavcodec/jpeglsenc.c
-        ${FFMPEG_DIR}/libavcodec/jpegquanttables.c
         ${FFMPEG_DIR}/libavcodec/jpegtables.c
-        ${FFMPEG_DIR}/libavcodec/jpegxl_parse.c
-        ${FFMPEG_DIR}/libavcodec/jpegxl_parser.c
         ${FFMPEG_DIR}/libavcodec/jrevdct.c
         ${FFMPEG_DIR}/libavcodec/jvdec.c
         ${FFMPEG_DIR}/libavcodec/kbdwin.c
@@ -432,10 +501,8 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/lagarith.c
         ${FFMPEG_DIR}/libavcodec/lagarithrac.c
         ${FFMPEG_DIR}/libavcodec/latm_parser.c
-        ${FFMPEG_DIR}/libavcodec/lcevcdec.c
         ${FFMPEG_DIR}/libavcodec/lcldec.c
         ${FFMPEG_DIR}/libavcodec/lclenc.c
-        ${FFMPEG_DIR}/libavcodec/leaddec.c
         ${FFMPEG_DIR}/libavcodec/ljpegenc.c
         ${FFMPEG_DIR}/libavcodec/loco.c
         ${FFMPEG_DIR}/libavcodec/lossless_audiodsp.c
@@ -452,16 +519,20 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/magicyuv.c
         ${FFMPEG_DIR}/libavcodec/magicyuvenc.c
         ${FFMPEG_DIR}/libavcodec/mathtables.c
+        ${FFMPEG_DIR}/libavcodec/mdct15.c
+        ${FFMPEG_DIR}/libavcodec/mdct_fixed_32.c
+        ${FFMPEG_DIR}/libavcodec/mdct_float.c
         ${FFMPEG_DIR}/libavcodec/mdec.c
         ${FFMPEG_DIR}/libavcodec/me_cmp.c
         ${FFMPEG_DIR}/libavcodec/mediacodec.c
         ${FFMPEG_DIR}/libavcodec/metasound.c
+        ${FFMPEG_DIR}/libavcodec/metasound_data.c
         ${FFMPEG_DIR}/libavcodec/microdvddec.c
         ${FFMPEG_DIR}/libavcodec/midivid.c
         ${FFMPEG_DIR}/libavcodec/mimic.c
-        ${FFMPEG_DIR}/libavcodec/misc4.c
-        ${FFMPEG_DIR}/libavcodec/misc4_parser.c
+        ${FFMPEG_DIR}/libavcodec/mjpeg2jpeg_bsf.c
         ${FFMPEG_DIR}/libavcodec/mjpeg_parser.c
+        ${FFMPEG_DIR}/libavcodec/mjpega_dump_header_bsf.c
         ${FFMPEG_DIR}/libavcodec/mjpegbdec.c
         ${FFMPEG_DIR}/libavcodec/mjpegdec.c
         ${FFMPEG_DIR}/libavcodec/mjpegdec_common.c
@@ -479,8 +550,10 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/mobiclip.c
         ${FFMPEG_DIR}/libavcodec/motion_est.c
         ${FFMPEG_DIR}/libavcodec/motionpixels.c
+        ${FFMPEG_DIR}/libavcodec/movsub_bsf.c
         ${FFMPEG_DIR}/libavcodec/movtextdec.c
         ${FFMPEG_DIR}/libavcodec/movtextenc.c
+        ${FFMPEG_DIR}/libavcodec/mp3_header_decompress_bsf.c
         ${FFMPEG_DIR}/libavcodec/mpc.c
         ${FFMPEG_DIR}/libavcodec/mpc7.c
         ${FFMPEG_DIR}/libavcodec/mpc8.c
@@ -489,12 +562,13 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/mpeg12dec.c
         ${FFMPEG_DIR}/libavcodec/mpeg12enc.c
         ${FFMPEG_DIR}/libavcodec/mpeg12framerate.c
+        ${FFMPEG_DIR}/libavcodec/mpeg2_metadata_bsf.c
+        ${FFMPEG_DIR}/libavcodec/mpeg4_unpack_bframes_bsf.c
         ${FFMPEG_DIR}/libavcodec/mpeg4audio.c
         ${FFMPEG_DIR}/libavcodec/mpeg4audio_sample_rates.c
         ${FFMPEG_DIR}/libavcodec/mpeg4video.c
         ${FFMPEG_DIR}/libavcodec/mpeg4video_parser.c
         ${FFMPEG_DIR}/libavcodec/mpeg4videodec.c
-        ${FFMPEG_DIR}/libavcodec/mpeg4videodsp.c
         ${FFMPEG_DIR}/libavcodec/mpeg4videoenc.c
         ${FFMPEG_DIR}/libavcodec/mpeg_er.c
         ${FFMPEG_DIR}/libavcodec/mpegaudio.c
@@ -519,6 +593,7 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/mpegvideo_motion.c
         ${FFMPEG_DIR}/libavcodec/mpegvideo_parser.c
         ${FFMPEG_DIR}/libavcodec/mpegvideodata.c
+        ${FFMPEG_DIR}/libavcodec/mpegvideodsp.c
         ${FFMPEG_DIR}/libavcodec/mpegvideoencdsp.c
         ${FFMPEG_DIR}/libavcodec/mpl2dec.c
         ${FFMPEG_DIR}/libavcodec/mqc.c
@@ -527,14 +602,12 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/mscc.c
         ${FFMPEG_DIR}/libavcodec/msgsmdec.c
         ${FFMPEG_DIR}/libavcodec/msmpeg4.c
-        ${FFMPEG_DIR}/libavcodec/msmpeg4_vc1_data.c
         ${FFMPEG_DIR}/libavcodec/msmpeg4data.c
         ${FFMPEG_DIR}/libavcodec/msmpeg4dec.c
         ${FFMPEG_DIR}/libavcodec/msmpeg4enc.c
         ${FFMPEG_DIR}/libavcodec/msp2dec.c
         ${FFMPEG_DIR}/libavcodec/msrle.c
         ${FFMPEG_DIR}/libavcodec/msrledec.c
-        ${FFMPEG_DIR}/libavcodec/msrleenc.c
         ${FFMPEG_DIR}/libavcodec/mss1.c
         ${FFMPEG_DIR}/libavcodec/mss12.c
         ${FFMPEG_DIR}/libavcodec/mss2.c
@@ -552,14 +625,26 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/nellymoser.c
         ${FFMPEG_DIR}/libavcodec/nellymoserdec.c
         ${FFMPEG_DIR}/libavcodec/nellymoserenc.c
+        ${FFMPEG_DIR}/libavcodec/neon/mpegvideo.c
+        ${FFMPEG_DIR}/libavcodec/noise_bsf.c
         ${FFMPEG_DIR}/libavcodec/notchlc.c
-        ${FFMPEG_DIR}/libavcodec/null.c
+        ${FFMPEG_DIR}/libavcodec/null_bsf.c
         ${FFMPEG_DIR}/libavcodec/nuv.c
         ${FFMPEG_DIR}/libavcodec/on2avc.c
         ${FFMPEG_DIR}/libavcodec/on2avcdata.c
         ${FFMPEG_DIR}/libavcodec/options.c
-        ${FFMPEG_DIR}/libavcodec/osq.c
-        ${FFMPEG_DIR}/libavcodec/packet.c
+        ${FFMPEG_DIR}/libavcodec/opus.c
+        ${FFMPEG_DIR}/libavcodec/opus_celt.c
+        ${FFMPEG_DIR}/libavcodec/opus_metadata_bsf.c
+        ${FFMPEG_DIR}/libavcodec/opus_parser.c
+        ${FFMPEG_DIR}/libavcodec/opus_pvq.c
+        ${FFMPEG_DIR}/libavcodec/opus_rc.c
+        ${FFMPEG_DIR}/libavcodec/opus_silk.c
+        ${FFMPEG_DIR}/libavcodec/opusdec.c
+        ${FFMPEG_DIR}/libavcodec/opusdsp.c
+        ${FFMPEG_DIR}/libavcodec/opusenc.c
+        ${FFMPEG_DIR}/libavcodec/opusenc_psy.c
+        ${FFMPEG_DIR}/libavcodec/opustab.c
         ${FFMPEG_DIR}/libavcodec/pafaudio.c
         ${FFMPEG_DIR}/libavcodec/pafvideo.c
         ${FFMPEG_DIR}/libavcodec/pamenc.c
@@ -570,9 +655,10 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/pcm-dvd.c
         ${FFMPEG_DIR}/libavcodec/pcm-dvdenc.c
         ${FFMPEG_DIR}/libavcodec/pcm.c
+        ${FFMPEG_DIR}/libavcodec/pcm_rechunk_bsf.c
         ${FFMPEG_DIR}/libavcodec/pcx.c
         ${FFMPEG_DIR}/libavcodec/pcxenc.c
-        ${FFMPEG_DIR}/libavcodec/pdvdec.c
+        ${FFMPEG_DIR}/libavcodec/pgs_frame_merge_bsf.c
         ${FFMPEG_DIR}/libavcodec/pgssubdec.c
         ${FFMPEG_DIR}/libavcodec/pgxdec.c
         ${FFMPEG_DIR}/libavcodec/photocd.c
@@ -589,8 +675,9 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/pnmdec.c
         ${FFMPEG_DIR}/libavcodec/pnmenc.c
         ${FFMPEG_DIR}/libavcodec/profiles.c
+        ${FFMPEG_DIR}/libavcodec/prores_metadata_bsf.c
         ${FFMPEG_DIR}/libavcodec/proresdata.c
-        ${FFMPEG_DIR}/libavcodec/proresdec.c
+        ${FFMPEG_DIR}/libavcodec/proresdec2.c
         ${FFMPEG_DIR}/libavcodec/proresdsp.c
         ${FFMPEG_DIR}/libavcodec/proresenc_anatoliy.c
         ${FFMPEG_DIR}/libavcodec/proresenc_kostya.c
@@ -605,7 +692,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/qdm2.c
         ${FFMPEG_DIR}/libavcodec/qdmc.c
         ${FFMPEG_DIR}/libavcodec/qdrw.c
-        ${FFMPEG_DIR}/libavcodec/qoadec.c
         ${FFMPEG_DIR}/libavcodec/qoi_parser.c
         ${FFMPEG_DIR}/libavcodec/qoidec.c
         ${FFMPEG_DIR}/libavcodec/qoienc.c
@@ -627,9 +713,9 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/raw.c
         ${FFMPEG_DIR}/libavcodec/rawdec.c
         ${FFMPEG_DIR}/libavcodec/rawenc.c
+        ${FFMPEG_DIR}/libavcodec/rdft.c
         ${FFMPEG_DIR}/libavcodec/realtextdec.c
-        ${FFMPEG_DIR}/libavcodec/refstruct.c
-        ${FFMPEG_DIR}/libavcodec/rka.c
+        ${FFMPEG_DIR}/libavcodec/remove_extradata_bsf.c
         ${FFMPEG_DIR}/libavcodec/rl.c
         ${FFMPEG_DIR}/libavcodec/rl2.c
         ${FFMPEG_DIR}/libavcodec/rle.c
@@ -641,7 +727,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/rpzaenc.c
         ${FFMPEG_DIR}/libavcodec/rscc.c
         ${FFMPEG_DIR}/libavcodec/rtjpeg.c
-        ${FFMPEG_DIR}/libavcodec/rtv1.c
         ${FFMPEG_DIR}/libavcodec/rv10.c
         ${FFMPEG_DIR}/libavcodec/rv10enc.c
         ${FFMPEG_DIR}/libavcodec/rv20enc.c
@@ -667,6 +752,7 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/sbrdsp_fixed.c
         ${FFMPEG_DIR}/libavcodec/scpr.c
         ${FFMPEG_DIR}/libavcodec/screenpresso.c
+        ${FFMPEG_DIR}/libavcodec/setts_bsf.c
         ${FFMPEG_DIR}/libavcodec/sga.c
         ${FFMPEG_DIR}/libavcodec/sgidec.c
         ${FFMPEG_DIR}/libavcodec/sgienc.c
@@ -690,7 +776,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/sonic.c
         ${FFMPEG_DIR}/libavcodec/sp5xdec.c
         ${FFMPEG_DIR}/libavcodec/speedhq.c
-        ${FFMPEG_DIR}/libavcodec/speedhqdec.c
         ${FFMPEG_DIR}/libavcodec/speedhqenc.c
         ${FFMPEG_DIR}/libavcodec/speexdec.c
         ${FFMPEG_DIR}/libavcodec/srtdec.c
@@ -715,7 +800,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/textdec.c
         ${FFMPEG_DIR}/libavcodec/texturedsp.c
         ${FFMPEG_DIR}/libavcodec/texturedspenc.c
-        ${FFMPEG_DIR}/libavcodec/threadprogress.c
         ${FFMPEG_DIR}/libavcodec/tiertexseqv.c
         ${FFMPEG_DIR}/libavcodec/tiff.c
         ${FFMPEG_DIR}/libavcodec/tiff_common.c
@@ -723,6 +807,8 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/tmv.c
         ${FFMPEG_DIR}/libavcodec/to_upper4.c
         ${FFMPEG_DIR}/libavcodec/tpeldsp.c
+        ${FFMPEG_DIR}/libavcodec/trace_headers_bsf.c
+        ${FFMPEG_DIR}/libavcodec/truehd_core_bsf.c
         ${FFMPEG_DIR}/libavcodec/truemotion1.c
         ${FFMPEG_DIR}/libavcodec/truemotion2.c
         ${FFMPEG_DIR}/libavcodec/truemotion2rt.c
@@ -780,7 +866,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/vlc.c
         ${FFMPEG_DIR}/libavcodec/vmdaudio.c
         ${FFMPEG_DIR}/libavcodec/vmdvideo.c
-        ${FFMPEG_DIR}/libavcodec/vmixdec.c
         ${FFMPEG_DIR}/libavcodec/vmnc.c
         ${FFMPEG_DIR}/libavcodec/vorbis.c
         ${FFMPEG_DIR}/libavcodec/vorbis_data.c
@@ -795,14 +880,18 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/vp56.c
         ${FFMPEG_DIR}/libavcodec/vp56data.c
         ${FFMPEG_DIR}/libavcodec/vp56dsp.c
+        ${FFMPEG_DIR}/libavcodec/vp56rac.c
         ${FFMPEG_DIR}/libavcodec/vp6.c
         ${FFMPEG_DIR}/libavcodec/vp6dsp.c
         ${FFMPEG_DIR}/libavcodec/vp8.c
         ${FFMPEG_DIR}/libavcodec/vp8_parser.c
-        ${FFMPEG_DIR}/libavcodec/vp8data.c
         ${FFMPEG_DIR}/libavcodec/vp8dsp.c
         ${FFMPEG_DIR}/libavcodec/vp9.c
+        ${FFMPEG_DIR}/libavcodec/vp9_metadata_bsf.c
         ${FFMPEG_DIR}/libavcodec/vp9_parser.c
+        ${FFMPEG_DIR}/libavcodec/vp9_raw_reorder_bsf.c
+        ${FFMPEG_DIR}/libavcodec/vp9_superframe_bsf.c
+        ${FFMPEG_DIR}/libavcodec/vp9_superframe_split_bsf.c
         ${FFMPEG_DIR}/libavcodec/vp9block.c
         ${FFMPEG_DIR}/libavcodec/vp9data.c
         ${FFMPEG_DIR}/libavcodec/vp9dsp.c
@@ -813,16 +902,10 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/vp9mvs.c
         ${FFMPEG_DIR}/libavcodec/vp9prob.c
         ${FFMPEG_DIR}/libavcodec/vp9recon.c
-        ${FFMPEG_DIR}/libavcodec/vpx_rac.c
         ${FFMPEG_DIR}/libavcodec/vqavideo.c
-        ${FFMPEG_DIR}/libavcodec/vqcdec.c
-        ${FFMPEG_DIR}/libavcodec/vvc_parser.c
-        ${FFMPEG_DIR}/libavcodec/wavarc.c
         ${FFMPEG_DIR}/libavcodec/wavpack.c
         ${FFMPEG_DIR}/libavcodec/wavpackdata.c
         ${FFMPEG_DIR}/libavcodec/wavpackenc.c
-        ${FFMPEG_DIR}/libavcodec/wbmpdec.c
-        ${FFMPEG_DIR}/libavcodec/wbmpenc.c
         ${FFMPEG_DIR}/libavcodec/wcmv.c
         ${FFMPEG_DIR}/libavcodec/webp.c
         ${FFMPEG_DIR}/libavcodec/webp_parser.c
@@ -858,7 +941,6 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/xsubdec.c
         ${FFMPEG_DIR}/libavcodec/xsubenc.c
         ${FFMPEG_DIR}/libavcodec/xvididct.c
-        ${FFMPEG_DIR}/libavcodec/xwd_parser.c
         ${FFMPEG_DIR}/libavcodec/xwddec.c
         ${FFMPEG_DIR}/libavcodec/xwdenc.c
         ${FFMPEG_DIR}/libavcodec/xxan.c
@@ -872,166 +954,10 @@ add_library(libavcodec STATIC
         ${FFMPEG_DIR}/libavcodec/zlib_wrapper.c
         ${FFMPEG_DIR}/libavcodec/zmbv.c
         ${FFMPEG_DIR}/libavcodec/zmbvenc.c
-        ${FFMPEG_DIR}/libavcodec/opus/celt.c
-        ${FFMPEG_DIR}/libavcodec/opus/dec.c
-        ${FFMPEG_DIR}/libavcodec/opus/dec_celt.c
-        ${FFMPEG_DIR}/libavcodec/opus/dsp.c
-        ${FFMPEG_DIR}/libavcodec/opus/enc.c
-        ${FFMPEG_DIR}/libavcodec/opus/enc_psy.c
-        ${FFMPEG_DIR}/libavcodec/opus/parse.c
-        ${FFMPEG_DIR}/libavcodec/opus/parser.c
-        ${FFMPEG_DIR}/libavcodec/opus/pvq.c
-        ${FFMPEG_DIR}/libavcodec/opus/rc.c
-        ${FFMPEG_DIR}/libavcodec/opus/silk.c
-        ${FFMPEG_DIR}/libavcodec/opus/tab.c
-        ${FFMPEG_DIR}/libavcodec/neon/mpegvideo.c
-        ${FFMPEG_DIR}/libavcodec/vvc/cabac.c
-        ${FFMPEG_DIR}/libavcodec/vvc/ctu.c
-        ${FFMPEG_DIR}/libavcodec/vvc/data.c
-        ${FFMPEG_DIR}/libavcodec/vvc/dec.c
-        ${FFMPEG_DIR}/libavcodec/vvc/dsp.c
-        ${FFMPEG_DIR}/libavcodec/vvc/filter.c
-        ${FFMPEG_DIR}/libavcodec/vvc/inter.c
-        ${FFMPEG_DIR}/libavcodec/vvc/intra.c
-        ${FFMPEG_DIR}/libavcodec/vvc/intra_utils.c
-        ${FFMPEG_DIR}/libavcodec/vvc/itx_1d.c
-        ${FFMPEG_DIR}/libavcodec/vvc/mvs.c
-        ${FFMPEG_DIR}/libavcodec/vvc/ps.c
-        ${FFMPEG_DIR}/libavcodec/vvc/refs.c
-        ${FFMPEG_DIR}/libavcodec/vvc/thread.c
-        ${FFMPEG_DIR}/libavcodec/bsf/aac_adtstoasc.c
-        ${FFMPEG_DIR}/libavcodec/bsf/av1_frame_merge.c
-        ${FFMPEG_DIR}/libavcodec/bsf/av1_frame_split.c
-        ${FFMPEG_DIR}/libavcodec/bsf/av1_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/chomp.c
-        ${FFMPEG_DIR}/libavcodec/bsf/dca_core.c
-        ${FFMPEG_DIR}/libavcodec/bsf/dovi_rpu.c
-        ${FFMPEG_DIR}/libavcodec/bsf/dts2pts.c
-        ${FFMPEG_DIR}/libavcodec/bsf/dump_extradata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/dv_error_marker.c
-        ${FFMPEG_DIR}/libavcodec/bsf/eac3_core.c
-        ${FFMPEG_DIR}/libavcodec/bsf/evc_frame_merge.c
-        ${FFMPEG_DIR}/libavcodec/bsf/extract_extradata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/filter_units.c
-        ${FFMPEG_DIR}/libavcodec/bsf/h264_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/h264_mp4toannexb.c
-        ${FFMPEG_DIR}/libavcodec/bsf/h264_redundant_pps.c
-        ${FFMPEG_DIR}/libavcodec/bsf/h265_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/h266_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/hapqa_extract.c
-        ${FFMPEG_DIR}/libavcodec/bsf/hevc_mp4toannexb.c
-        ${FFMPEG_DIR}/libavcodec/bsf/imx_dump_header.c
-        ${FFMPEG_DIR}/libavcodec/bsf/media100_to_mjpegb.c
-        ${FFMPEG_DIR}/libavcodec/bsf/mjpeg2jpeg.c
-        ${FFMPEG_DIR}/libavcodec/bsf/mjpega_dump_header.c
-        ${FFMPEG_DIR}/libavcodec/bsf/movsub.c
-        ${FFMPEG_DIR}/libavcodec/bsf/mpeg2_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/mpeg4_unpack_bframes.c
-        ${FFMPEG_DIR}/libavcodec/bsf/noise.c
-        ${FFMPEG_DIR}/libavcodec/bsf/null.c
-        ${FFMPEG_DIR}/libavcodec/bsf/opus_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/pcm_rechunk.c
-        ${FFMPEG_DIR}/libavcodec/bsf/pgs_frame_merge.c
-        ${FFMPEG_DIR}/libavcodec/bsf/prores_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/remove_extradata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/setts.c
-        ${FFMPEG_DIR}/libavcodec/bsf/showinfo.c
-        ${FFMPEG_DIR}/libavcodec/bsf/trace_headers.c
-        ${FFMPEG_DIR}/libavcodec/bsf/truehd_core.c
-        ${FFMPEG_DIR}/libavcodec/bsf/vp9_metadata.c
-        ${FFMPEG_DIR}/libavcodec/bsf/vp9_raw_reorder.c
-        ${FFMPEG_DIR}/libavcodec/bsf/vp9_superframe.c
-        ${FFMPEG_DIR}/libavcodec/bsf/vp9_superframe_split.c
-        ${FFMPEG_DIR}/libavcodec/bsf/vvc_mp4toannexb.c
-        ${FFMPEG_DIR}/libavcodec/aac/aacdec.c
-        ${FFMPEG_DIR}/libavcodec/aac/aacdec_ac.c
-        ${FFMPEG_DIR}/libavcodec/aac/aacdec_fixed.c
-        ${FFMPEG_DIR}/libavcodec/aac/aacdec_float.c
-        ${FFMPEG_DIR}/libavcodec/aac/aacdec_lpd.c
-        ${FFMPEG_DIR}/libavcodec/aac/aacdec_tab.c
-        ${FFMPEG_DIR}/libavcodec/aac/aacdec_usac.c
-        ${FFMPEG_DIR}/libavcodec/hevc/cabac.c
-        ${FFMPEG_DIR}/libavcodec/hevc/data.c
-        ${FFMPEG_DIR}/libavcodec/hevc/dsp.c
-        ${FFMPEG_DIR}/libavcodec/hevc/filter.c
-        ${FFMPEG_DIR}/libavcodec/hevc/hevcdec.c
-        ${FFMPEG_DIR}/libavcodec/hevc/mvs.c
-        ${FFMPEG_DIR}/libavcodec/hevc/parse.c
-        ${FFMPEG_DIR}/libavcodec/hevc/parser.c
-        ${FFMPEG_DIR}/libavcodec/hevc/pred.c
-        ${FFMPEG_DIR}/libavcodec/hevc/ps.c
-        ${FFMPEG_DIR}/libavcodec/hevc/refs.c
-        ${FFMPEG_DIR}/libavcodec/hevc/sei.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/aacpsdsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/aacpsdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/ac3dsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/ac3dsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/fdctdsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/fdctdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/fmtconvert_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/fmtconvert_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264chroma_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264cmc_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264dsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264dsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264idct_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264pred_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264pred_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264qpel_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/h264qpel_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/hevcdsp_deblock_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/hevcdsp_idct_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/hevcdsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/hpeldsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/hpeldsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/idctdsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/idctdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/me_cmp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/me_cmp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/mpegaudiodsp_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/mpegaudiodsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/mpegvideoencdsp_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/mpegvideoencdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/opusdsp_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/opusdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/pixblockdsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/pixblockdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/rv40dsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/sbrdsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/sbrdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/simple_idct_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/synth_filter_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/synth_filter_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vc1dsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vc1dsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/videodsp.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/videodsp_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vorbisdsp_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vorbisdsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp8dsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp8dsp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9dsp_init_10bpp_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9dsp_init_12bpp_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9dsp_init_aarch64.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9itxfm_16bpp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9itxfm_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9lpf_16bpp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9lpf_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9mc_16bpp_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9mc_aarch64.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vp9mc_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vvc/alf.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vvc/dsp_init.c
-        ${FFMPEG_DIR}/libavcodec/aarch64/vvc/inter.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/vvc/sad.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h26x/epel_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h26x/qpel_neon.S
-        ${FFMPEG_DIR}/libavcodec/aarch64/h26x/sao_neon.S
 )
 
 target_include_directories(libavcodec PRIVATE
         ${FFMPEG_DIR}
-        ${FFMPEG_DIR}/libavcodec
         ${FFMPEG_INC}
 )
 

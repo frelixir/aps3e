@@ -4,8 +4,8 @@ project(libavfilter LANGUAGES C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 
 add_library(libavfilter STATIC
+        ${FFMPEG_DIR}/libavfilter/aarch64/vf_nlmeans_init.c
         ${FFMPEG_DIR}/libavfilter/aeval.c
-        ${FFMPEG_DIR}/libavfilter/af_aap.c
         ${FFMPEG_DIR}/libavfilter/af_acontrast.c
         ${FFMPEG_DIR}/libavfilter/af_acopy.c
         ${FFMPEG_DIR}/libavfilter/af_acrossover.c
@@ -15,7 +15,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/af_adelay.c
         ${FFMPEG_DIR}/libavfilter/af_adenorm.c
         ${FFMPEG_DIR}/libavfilter/af_aderivative.c
-        ${FFMPEG_DIR}/libavfilter/af_adrc.c
         ${FFMPEG_DIR}/libavfilter/af_adynamicequalizer.c
         ${FFMPEG_DIR}/libavfilter/af_adynamicsmooth.c
         ${FFMPEG_DIR}/libavfilter/af_aecho.c
@@ -43,7 +42,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/af_apsyclip.c
         ${FFMPEG_DIR}/libavfilter/af_apulsator.c
         ${FFMPEG_DIR}/libavfilter/af_aresample.c
-        ${FFMPEG_DIR}/libavfilter/af_arls.c
         ${FFMPEG_DIR}/libavfilter/af_arnndn.c
         ${FFMPEG_DIR}/libavfilter/af_asdr.c
         ${FFMPEG_DIR}/libavfilter/af_asetnsamples.c
@@ -97,7 +95,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/af_volumedetect.c
         ${FFMPEG_DIR}/libavfilter/allfilters.c
         ${FFMPEG_DIR}/libavfilter/asink_anullsink.c
-        ${FFMPEG_DIR}/libavfilter/asrc_afdelaysrc.c
         ${FFMPEG_DIR}/libavfilter/asrc_afirsrc.c
         ${FFMPEG_DIR}/libavfilter/asrc_anoisesrc.c
         ${FFMPEG_DIR}/libavfilter/asrc_anullsrc.c
@@ -105,14 +102,12 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/asrc_sinc.c
         ${FFMPEG_DIR}/libavfilter/asrc_sine.c
         ${FFMPEG_DIR}/libavfilter/audio.c
-        ${FFMPEG_DIR}/libavfilter/avf_a3dscope.c
         ${FFMPEG_DIR}/libavfilter/avf_abitscope.c
         ${FFMPEG_DIR}/libavfilter/avf_ahistogram.c
         ${FFMPEG_DIR}/libavfilter/avf_aphasemeter.c
         ${FFMPEG_DIR}/libavfilter/avf_avectorscope.c
         ${FFMPEG_DIR}/libavfilter/avf_concat.c
         ${FFMPEG_DIR}/libavfilter/avf_showcqt.c
-        ${FFMPEG_DIR}/libavfilter/avf_showcwt.c
         ${FFMPEG_DIR}/libavfilter/avf_showfreqs.c
         ${FFMPEG_DIR}/libavfilter/avf_showspatial.c
         ${FFMPEG_DIR}/libavfilter/avf_showspectrum.c
@@ -123,10 +118,24 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/bbox.c
         ${FFMPEG_DIR}/libavfilter/buffersink.c
         ${FFMPEG_DIR}/libavfilter/buffersrc.c
-        ${FFMPEG_DIR}/libavfilter/bwdifdsp.c
-        ${FFMPEG_DIR}/libavfilter/ccfifo.c
         ${FFMPEG_DIR}/libavfilter/colorspace.c
         ${FFMPEG_DIR}/libavfilter/colorspacedsp.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_common.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_avgpool.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_conv2d.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_dense.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_depth2space.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_mathbinary.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_mathunary.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_maximum.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layer_pad.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_backend_native_layers.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_interface.c
+        ${FFMPEG_DIR}/libavfilter/dnn/dnn_io_proc.c
+        ${FFMPEG_DIR}/libavfilter/dnn/queue.c
+        ${FFMPEG_DIR}/libavfilter/dnn/safe_queue.c
+        ${FFMPEG_DIR}/libavfilter/dnn_filter_common.c
         ${FFMPEG_DIR}/libavfilter/drawutils.c
         ${FFMPEG_DIR}/libavfilter/ebur128.c
         ${FFMPEG_DIR}/libavfilter/edge_common.c
@@ -147,6 +156,7 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/f_sendcmd.c
         ${FFMPEG_DIR}/libavfilter/f_sidedata.c
         ${FFMPEG_DIR}/libavfilter/f_streamselect.c
+        ${FFMPEG_DIR}/libavfilter/fifo.c
         ${FFMPEG_DIR}/libavfilter/formats.c
         ${FFMPEG_DIR}/libavfilter/framepool.c
         ${FFMPEG_DIR}/libavfilter/framequeue.c
@@ -157,8 +167,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/lavfutils.c
         ${FFMPEG_DIR}/libavfilter/lswsutils.c
         ${FFMPEG_DIR}/libavfilter/motion_estimation.c
-        ${FFMPEG_DIR}/libavfilter/palette.c
-        ${FFMPEG_DIR}/libavfilter/perlin.c
         ${FFMPEG_DIR}/libavfilter/pthread.c
         ${FFMPEG_DIR}/libavfilter/qp_table.c
         ${FFMPEG_DIR}/libavfilter/scale_eval.c
@@ -178,7 +186,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_aspect.c
         ${FFMPEG_DIR}/libavfilter/vf_atadenoise.c
         ${FFMPEG_DIR}/libavfilter/vf_avgblur.c
-        ${FFMPEG_DIR}/libavfilter/vf_backgroundkey.c
         ${FFMPEG_DIR}/libavfilter/vf_bbox.c
         ${FFMPEG_DIR}/libavfilter/vf_bilateral.c
         ${FFMPEG_DIR}/libavfilter/vf_bitplanenoise.c
@@ -189,7 +196,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_bm3d.c
         ${FFMPEG_DIR}/libavfilter/vf_bwdif.c
         ${FFMPEG_DIR}/libavfilter/vf_cas.c
-        ${FFMPEG_DIR}/libavfilter/vf_ccrepack.c
         ${FFMPEG_DIR}/libavfilter/vf_chromakey.c
         ${FFMPEG_DIR}/libavfilter/vf_chromanr.c
         ${FFMPEG_DIR}/libavfilter/vf_chromashift.c
@@ -209,7 +215,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_convolution.c
         ${FFMPEG_DIR}/libavfilter/vf_convolve.c
         ${FFMPEG_DIR}/libavfilter/vf_copy.c
-        ${FFMPEG_DIR}/libavfilter/vf_corr.c
         ${FFMPEG_DIR}/libavfilter/vf_crop.c
         ${FFMPEG_DIR}/libavfilter/vf_curves.c
         ${FFMPEG_DIR}/libavfilter/vf_datascope.c
@@ -221,10 +226,14 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_dedot.c
         ${FFMPEG_DIR}/libavfilter/vf_deflicker.c
         ${FFMPEG_DIR}/libavfilter/vf_dejudder.c
+        ${FFMPEG_DIR}/libavfilter/vf_derain.c
         ${FFMPEG_DIR}/libavfilter/vf_deshake.c
         ${FFMPEG_DIR}/libavfilter/vf_despill.c
         ${FFMPEG_DIR}/libavfilter/vf_detelecine.c
         ${FFMPEG_DIR}/libavfilter/vf_displace.c
+        ${FFMPEG_DIR}/libavfilter/vf_dnn_classify.c
+        ${FFMPEG_DIR}/libavfilter/vf_dnn_detect.c
+        ${FFMPEG_DIR}/libavfilter/vf_dnn_processing.c
         ${FFMPEG_DIR}/libavfilter/vf_drawbox.c
         ${FFMPEG_DIR}/libavfilter/vf_edgedetect.c
         ${FFMPEG_DIR}/libavfilter/vf_elbg.c
@@ -250,7 +259,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_framestep.c
         ${FFMPEG_DIR}/libavfilter/vf_freezedetect.c
         ${FFMPEG_DIR}/libavfilter/vf_freezeframes.c
-        ${FFMPEG_DIR}/libavfilter/vf_fsync.c
         ${FFMPEG_DIR}/libavfilter/vf_gblur.c
         ${FFMPEG_DIR}/libavfilter/vf_geq.c
         ${FFMPEG_DIR}/libavfilter/vf_gradfun.c
@@ -329,8 +337,8 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_shuffleplanes.c
         ${FFMPEG_DIR}/libavfilter/vf_signalstats.c
         ${FFMPEG_DIR}/libavfilter/vf_siti.c
+        ${FFMPEG_DIR}/libavfilter/vf_sr.c
         ${FFMPEG_DIR}/libavfilter/vf_ssim.c
-        ${FFMPEG_DIR}/libavfilter/vf_ssim360.c
         ${FFMPEG_DIR}/libavfilter/vf_stack.c
         ${FFMPEG_DIR}/libavfilter/vf_swaprect.c
         ${FFMPEG_DIR}/libavfilter/vf_swapuv.c
@@ -338,7 +346,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_threshold.c
         ${FFMPEG_DIR}/libavfilter/vf_thumbnail.c
         ${FFMPEG_DIR}/libavfilter/vf_tile.c
-        ${FFMPEG_DIR}/libavfilter/vf_tiltandshift.c
         ${FFMPEG_DIR}/libavfilter/vf_tmidequalizer.c
         ${FFMPEG_DIR}/libavfilter/vf_tonemap.c
         ${FFMPEG_DIR}/libavfilter/vf_tpad.c
@@ -360,7 +367,6 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vf_xbr.c
         ${FFMPEG_DIR}/libavfilter/vf_xfade.c
         ${FFMPEG_DIR}/libavfilter/vf_xmedian.c
-        ${FFMPEG_DIR}/libavfilter/vf_xpsnr.c
         ${FFMPEG_DIR}/libavfilter/vf_yadif.c
         ${FFMPEG_DIR}/libavfilter/vf_yaepblur.c
         ${FFMPEG_DIR}/libavfilter/vf_zoompan.c
@@ -370,14 +376,9 @@ add_library(libavfilter STATIC
         ${FFMPEG_DIR}/libavfilter/vsrc_gradients.c
         ${FFMPEG_DIR}/libavfilter/vsrc_life.c
         ${FFMPEG_DIR}/libavfilter/vsrc_mandelbrot.c
-        ${FFMPEG_DIR}/libavfilter/vsrc_perlin.c
         ${FFMPEG_DIR}/libavfilter/vsrc_sierpinski.c
         ${FFMPEG_DIR}/libavfilter/vsrc_testsrc.c
         ${FFMPEG_DIR}/libavfilter/yadif_common.c
-        ${FFMPEG_DIR}/libavfilter/aarch64/vf_bwdif_init_aarch64.c
-        ${FFMPEG_DIR}/libavfilter/aarch64/vf_bwdif_neon.S
-        ${FFMPEG_DIR}/libavfilter/aarch64/vf_nlmeans_init.c
-        ${FFMPEG_DIR}/libavfilter/aarch64/vf_nlmeans_neon.S
 )
 
 target_include_directories(libavfilter PRIVATE

@@ -1,4 +1,4 @@
-static const FFInputFormat * const indev_list[] = {
+static const AVInputFormat * const indev_list[] = {
     &ff_android_camera_demuxer,
     &ff_fbdev_demuxer,
     &ff_lavfi_demuxer,

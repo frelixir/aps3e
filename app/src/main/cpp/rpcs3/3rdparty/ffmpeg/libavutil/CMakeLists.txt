@@ -4,10 +4,13 @@ project(libavutil LANGUAGES C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 
 add_library(libavutil STATIC
+        ${FFMPEG_DIR}/libavutil/../compat/strtod.c
+        ${FFMPEG_DIR}/libavutil/aarch64/cpu.c
+        ${FFMPEG_DIR}/libavutil/aarch64/float_dsp_init.c
+        ${FFMPEG_DIR}/libavutil/aarch64/float_dsp_neon.S
         ${FFMPEG_DIR}/libavutil/adler32.c
         ${FFMPEG_DIR}/libavutil/aes.c
         ${FFMPEG_DIR}/libavutil/aes_ctr.c
-        ${FFMPEG_DIR}/libavutil/ambient_viewing_environment.c
         ${FFMPEG_DIR}/libavutil/audio_fifo.c
         ${FFMPEG_DIR}/libavutil/avsscanf.c
         ${FFMPEG_DIR}/libavutil/avstring.c
@@ -18,6 +21,7 @@ add_library(libavutil STATIC
         ${FFMPEG_DIR}/libavutil/camellia.c
         ${FFMPEG_DIR}/libavutil/cast5.c
         ${FFMPEG_DIR}/libavutil/channel_layout.c
+        ${FFMPEG_DIR}/libavutil/color_utils.c
         ${FFMPEG_DIR}/libavutil/cpu.c
         ${FFMPEG_DIR}/libavutil/crc.c
         ${FFMPEG_DIR}/libavutil/csp.c
@@ -30,7 +34,6 @@ add_library(libavutil STATIC
         ${FFMPEG_DIR}/libavutil/encryption_info.c
         ${FFMPEG_DIR}/libavutil/error.c
         ${FFMPEG_DIR}/libavutil/eval.c
-        ${FFMPEG_DIR}/libavutil/executor.c
         ${FFMPEG_DIR}/libavutil/fifo.c
         ${FFMPEG_DIR}/libavutil/file.c
         ${FFMPEG_DIR}/libavutil/file_open.c
@@ -44,7 +47,6 @@ add_library(libavutil STATIC
         ${FFMPEG_DIR}/libavutil/hmac.c
         ${FFMPEG_DIR}/libavutil/hwcontext.c
         ${FFMPEG_DIR}/libavutil/hwcontext_stub.c
-        ${FFMPEG_DIR}/libavutil/iamf.c
         ${FFMPEG_DIR}/libavutil/imgutils.c
         ${FFMPEG_DIR}/libavutil/integer.c
         ${FFMPEG_DIR}/libavutil/intmath.c
@@ -77,7 +79,6 @@ add_library(libavutil STATIC
         ${FFMPEG_DIR}/libavutil/threadmessage.c
         ${FFMPEG_DIR}/libavutil/time.c
         ${FFMPEG_DIR}/libavutil/timecode.c
-        ${FFMPEG_DIR}/libavutil/timestamp.c
         ${FFMPEG_DIR}/libavutil/tree.c
         ${FFMPEG_DIR}/libavutil/twofish.c
         ${FFMPEG_DIR}/libavutil/tx.c
@@ -88,14 +89,8 @@ add_library(libavutil STATIC
         ${FFMPEG_DIR}/libavutil/uuid.c
         ${FFMPEG_DIR}/libavutil/version.c
         ${FFMPEG_DIR}/libavutil/video_enc_params.c
-        ${FFMPEG_DIR}/libavutil/video_hint.c
         ${FFMPEG_DIR}/libavutil/xga_font_data.c
         ${FFMPEG_DIR}/libavutil/xtea.c
-        ${FFMPEG_DIR}/libavutil/aarch64/cpu.c
-        ${FFMPEG_DIR}/libavutil/aarch64/float_dsp_init.c
-        ${FFMPEG_DIR}/libavutil/aarch64/float_dsp_neon.S
-        ${FFMPEG_DIR}/libavutil/aarch64/tx_float_init.c
-        ${FFMPEG_DIR}/libavutil/aarch64/tx_float_neon.S
 )
 
 target_include_directories(libavutil PRIVATE
