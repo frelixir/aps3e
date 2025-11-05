@@ -187,6 +187,9 @@ public class AboutActivity extends AppCompatActivity {
                 + " *修复sys_fs解析iso目录的问题\n"
                 + " *打开DG类游戏时，自动安装PKG（需要删除config/dev_hdd0/game/$locks目录一次）\n"
                 + " *可安装edat\n"
+                + "1.32(2025-11-06)\n"
+                + " *修复多个bug\n"
+                + " *界面更新\n"
                 + " \n";
 
         return log;
