@@ -54,21 +54,16 @@ public class Emulator extends aenu.emulator.Emulator
 
 		static MetaInfo from_json(JSONObject jo) throws JSONException{
 			MetaInfo meta=new MetaInfo();
-			if(jo.has("eboot_path"))
-			meta.eboot_path=jo.getString("eboot_path");
-			if(jo.has("iso_uri"))
-			meta.iso_uri=jo.getString("iso_uri");
-			if(jo.has("icon"))
-			meta.icon=Base64.getDecoder().decode(jo.getString("icon"));
+			if(jo.has("eboot_path")) meta.eboot_path=jo.getString("eboot_path");
+			if(jo.has("iso_uri")) meta.iso_uri=jo.getString("iso_uri");
+			if(jo.has("icon")) meta.icon=Base64.getDecoder().decode(jo.getString("icon"));
 			meta.name=jo.getString("name");
 			meta.serial=jo.getString("serial");
 			meta.category=jo.getString("category");
 			meta.version=jo.getString("version");
 			meta.decrypt=jo.getBoolean("decrypt");
-			if(jo.has("resolution"))
-				meta.resolution=jo.getInt("resolution");
-			if(jo.has("sound_format"))
-				meta.sound_format=jo.getInt("sound_format");
+			if(jo.has("resolution")) meta.resolution=jo.getInt("resolution");
+			if(jo.has("sound_format")) meta.sound_format=jo.getInt("sound_format");
 			return meta;
 		}
 
@@ -147,6 +142,20 @@ public class Emulator extends aenu.emulator.Emulator
 					.append("Sound Format:\n").append(_parse_sound_format()).append("\n\n");
 			return sb.toString();
 		}
+	}
+
+	static class CheatInfo{
+		static final int TYPE_U8 =1;
+		static final int TYPE_U16=2;
+		static final int TYPE_U32=3;
+		static final int TYPE_U64=4;
+
+		static final long NOT_FOUND=-1;
+
+		long addr;
+		long value;
+
+		int type;
 	}
 
 	static class GameTrophyInfo{
@@ -638,5 +647,8 @@ public class Emulator extends aenu.emulator.Emulator
 	public native boolean precompile_ppu_cache(int fd);
 
 	private native GameTrophyInfo trophy_info_from_dir(String real_path,String vfs_path);
+
+	public native CheatInfo[] search_memory(CheatInfo info);
+	public native void set_cheat(CheatInfo info);
     
 }

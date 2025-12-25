@@ -4,6 +4,29 @@
 	<string name="app_name">aPS3e</string>
 
 	<string name="creating_ppu_cache">Creating PPU cache</string>
+	<string name="please_enter_a_search_value">Please enter a search value</string>
+	<string name="search_value_cannot_be_greater_than">Search value cannot be greater than</string>
+	<string name="search_results_0_matches">Search results: 0 matches</string>
+	<string name="please_select_the_address_to_write_to_first">Please select the address to write to first</string>
+	<string name="no_matching_memory_address_found">No matching memory address found</string>
+	<string name="search_results_n_matches">Search results: %d matches</string>
+	<string name="please_enter_a_valid_number">Please enter a valid number (hexadecimal)</string>
+	<string name="search_failed">Search failed: </string>
+	<string name="address_selected">Address selected: </string>
+	<string name="please_select_the_memory_address_to_write_to_first">Please select the memory address to write to first</string>
+	<string name="please_enter_the_value_to_write">Please enter the value to write</string>
+	<string name="the_value_to_be_written_cannot_be_greater_than">The value to be written cannot be greater than</string>
+	<string name="write_successful">Write successful</string>
+	<string name="write_failed">Write failed</string>
+	<string name="memory_search">Memory Search</string>
+	<string name="search_type_hint">Search Type:</string>
+	<string name="search_value_hint">Search Value:</string>
+	<string name="please_enter_the_value_to_search">Please enter the value to search</string>
+	<string name="start_search">Start Search</string>
+	<string name="search_results_list_hint">Search results list</string>
+	<string name="memory_write">Memory Write</string>
+	<string name="enter_the_value_to_write">Enter the value to write</string>
+
 	<string name="show_trophy_info">Show Trophy Info</string>
 	<string name="create_ppu_cache">Create PPU Cache</string>
 	<string name="delete_ppu_cache">Delete PPU Cache</string>

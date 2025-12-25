@@ -163,4 +163,9 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
+
+    static long convert_hex_str_to_long(String hex){
+        if(hex.startsWith("0x"))hex=hex.substring(2);
+        return Long.parseLong(hex.toUpperCase(),16);
+    }
 }

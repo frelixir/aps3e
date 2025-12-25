@@ -427,6 +427,85 @@ static jobject j_trophy_info_from_dir(JNIEnv* env,jobject self,jstring jreal_pat
     return result;
 }
 
+static jobjectArray j_search_memory(JNIEnv* env,jobject self,jobject search_info){
+
+    jclass CheatInfo=env->GetObjectClass(search_info);
+    jmethodID mth_constructor=env->GetMethodID(CheatInfo,"<init>","()V");
+    jfieldID fid_CheatInfo_addr=env->GetFieldID(CheatInfo,"addr","J");
+    jfieldID fid_CheatInfo_value=env->GetFieldID(CheatInfo,"value","J");
+    jfieldID fid_CheatInfo_type=env->GetFieldID(CheatInfo,"type","I");
+    jint type=env->GetIntField(search_info,fid_CheatInfo_type);
+    jlong search_value=env->GetLongField(search_info,fid_CheatInfo_value);
+
+    std::vector<u32> search_result;
+    switch (type) {
+        case 1://TYPE_U8
+        {
+            search_result=ae::mem_search<u8>(static_cast<u8>(search_value));
+        }
+        break;
+        case 2://TYPE_U16
+        {
+            search_result=ae::mem_search<u16>(static_cast<u16>(search_value));
+        }
+        break;
+        case 3://TYPE_U32
+        {
+            search_result=ae::mem_search<u32>(static_cast<u32>(search_value));
+        }
+        break;
+        case 4://TYPE_U64
+        {
+            search_result=ae::mem_search<u64>(static_cast<u64>(search_value));
+        }
+        break;
+    }
+
+    if(search_result.empty()) return nullptr;
+
+    jobjectArray result=env->NewObjectArray(search_result.size(),CheatInfo,nullptr);
+    for(size_t i=0;i<search_result.size();++i){
+        jobject obj=env->NewObject(CheatInfo,mth_constructor);
+        env->SetLongField(obj,fid_CheatInfo_addr,search_result[i]);
+        env->SetLongField(obj,fid_CheatInfo_value,search_value);
+        env->SetIntField(obj,fid_CheatInfo_type,type);
+        env->SetObjectArrayElement(result,i,obj);
+    }
+    return result;
+}
+
+static void j_set_cheat(JNIEnv* env,jobject self,jobject cheat_info){
+    jclass CheatInfo=env->GetObjectClass(cheat_info);
+    jfieldID fid_CheatInfo_addr=env->GetFieldID(CheatInfo,"addr","J");
+    jfieldID fid_CheatInfo_value=env->GetFieldID(CheatInfo,"value","J");
+    jfieldID fid_CheatInfo_type=env->GetFieldID(CheatInfo,"type","I");
+    jlong addr=env->GetLongField(cheat_info,fid_CheatInfo_addr);
+    jlong value=env->GetLongField(cheat_info,fid_CheatInfo_value);
+    jint type=env->GetIntField(cheat_info,fid_CheatInfo_type);
+    switch (type) {
+        case 1://TYPE_U8
+        {
+            ae::mem_set_value<u8>(static_cast<u32>(addr),static_cast<u8>(value));
+        }
+        break;
+        case 2://TYPE_U16
+        {
+            ae::mem_set_value<u16>(static_cast<u32>(addr),static_cast<u16>(value));
+        }
+        break;
+        case 3://TYPE_U32
+        {
+            ae::mem_set_value<u32>(static_cast<u32>(addr),static_cast<u32>(value));
+        }
+        break;
+        case 4://TYPE_U64
+        {
+            ae::mem_set_value<u64>(static_cast<u32>(addr),static_cast<u64>(value));
+        }
+        break;
+    }
+}
+
 static auto gen_key=[](const std::string& name)->std::string{
     std::string k=name;
     if(size_t p=k.find("(");p!=std::string::npos){
@@ -935,7 +1014,9 @@ int register_aps3e_Emulator(JNIEnv* env){
             {"precompile_ppu_cache", "(Ljava/lang/String;)Z", (void *) j_precompile_ppu_cache},
 
             {"precompile_ppu_cache", "(I)Z", (void *) j_precompile_ppu_cache_with_fd},
-            { "trophy_info_from_dir", "(Ljava/lang/String;Ljava/lang/String;)Laenu/aps3e/Emulator$GameTrophyInfo;", (void *) j_trophy_info_from_dir}
+            { "trophy_info_from_dir", "(Ljava/lang/String;Ljava/lang/String;)Laenu/aps3e/Emulator$GameTrophyInfo;", (void *) j_trophy_info_from_dir},
+            { "search_memory", "(Laenu/aps3e/Emulator$CheatInfo;)[Laenu/aps3e/Emulator$CheatInfo;", (void *) j_search_memory},
+            { "set_cheat", "(Laenu/aps3e/Emulator$CheatInfo;)V", (void *) j_set_cheat},
 
     };
 

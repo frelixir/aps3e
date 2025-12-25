@@ -3,6 +3,8 @@
 package aenu.aps3e;
 
 import android.app.*;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.*;
 import android.view.*;
@@ -14,9 +16,15 @@ import org.vita3k.emulator.overlay.InputOverlay.ControlId;
 import android.content.res.*;
 
 import androidx.annotation.NonNull;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.Process;
+import java.util.ArrayList;
+import java.util.List;
 
 import aenu.hardware.ProcessorInfo;
 
@@ -33,6 +41,7 @@ public class EmulatorActivity extends Activity implements View.OnGenericMotionLi
     static final int DELAY_ON_CREATE=0xaeae0001;
     private SparseIntArray keysMap = new SparseIntArray();
     private GameFrameView gv;
+    private DrawerLayout drawerLayout;
 
 	private Vibrator vibrator=null;
 	private VibrationEffect vibrationEffect=null;
@@ -66,6 +75,7 @@ public class EmulatorActivity extends Activity implements View.OnGenericMotionLi
 
 	void on_create(){
 		setContentView(R.layout.emulator_view);
+		drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 		gv=(GameFrameView)findViewById(R.id.emulator_view);
 
 		gv.setFocusable(true);
@@ -76,6 +86,7 @@ public class EmulatorActivity extends Activity implements View.OnGenericMotionLi
 
 		gv.getHolder().addCallback(EmulatorActivity.this);
 
+		setup_sidebar();
 		load_key_map_and_vibrator();
 
 		Emulator.MetaInfo meta_info=null;
@@ -127,6 +138,200 @@ public class EmulatorActivity extends Activity implements View.OnGenericMotionLi
 		}
 
 		Emulator.get.setup_game_id(meta_info.serial);
+	}
+	
+	void setup_sidebar() {
+		Button btnMemorySearch = (Button)findViewById(R.id.btn_memory_search);
+		Button btnQuit = (Button)findViewById(R.id.btn_quit);
+
+		btnMemorySearch.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				close_sidebar();
+				show_memory_search_view();
+			}
+		});
+
+		btnQuit.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				show_quit_confirmation();
+			}
+		});
+	}
+	void show_memory_search_view() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		View view = getLayoutInflater().inflate(R.layout.memory_search_view, null);
+		builder.setView(view);
+		
+		final AlertDialog dialog = builder.create();
+
+		Spinner searchTypeSpinner = (Spinner)view.findViewById(R.id.search_type);
+		EditText searchValueEditText = (EditText)view.findViewById(R.id.search_value);
+		TextView searchResultTextView = (TextView)view.findViewById(R.id.search_result);
+		ListView searchListView = (ListView)view.findViewById(R.id.search_list);
+		TextView selectedAddressTextView = (TextView)view.findViewById(R.id.selected_address);
+		EditText writeValueEditText = (EditText)view.findViewById(R.id.write_value);
+		Button btnSearch = (Button)view.findViewById(R.id.btn_search);
+		Button btnWrite = (Button)view.findViewById(R.id.btn_write);
+
+		String[] searchTypes = {"U8", "U16", "U32"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, searchTypes);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		searchTypeSpinner.setAdapter(adapter);
+
+		final ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+		searchListView.setAdapter(listAdapter);
+
+		btnSearch.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String searchValueStr = searchValueEditText.getText().toString();
+				if (searchValueStr.isEmpty()) {
+					Toast.makeText(EmulatorActivity.this, R.string.please_enter_a_search_value, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				
+				try {
+					long searchValue = Utils.convert_hex_str_to_long(searchValueStr);
+					int searchType = searchTypeSpinner.getSelectedItemPosition() + 1;
+					String exception_msg_prefix=getString(R.string.search_value_cannot_be_greater_than);
+					switch (searchType) {
+					case 1:
+						if(searchValue > 0xFF)
+							throw new Exception(exception_msg_prefix+"0xFF");
+						break;
+
+					case 2:
+						if(searchValue > 0xFFFF)
+							throw new Exception(exception_msg_prefix+"0xFFFF");
+						break;
+
+					case 3:
+						if(searchValue > 0xFFFFFFFFL)
+							throw new Exception(exception_msg_prefix+"0xFFFFFFFF");
+						break;
+					}
+
+					Emulator.CheatInfo searchInfo = new Emulator.CheatInfo();
+					searchInfo.type = searchType;
+					searchInfo.value = searchValue;
+					Emulator.CheatInfo[] searchResults = Emulator.get.search_memory(searchInfo);
+					
+					if (searchResults == null || searchResults.length == 0) {
+						listAdapter.clear();
+						searchResultTextView.setText(R.string.search_results_0_matches);
+						selectedAddressTextView.setText(R.string.please_select_the_address_to_write_to_first);
+						Toast.makeText(EmulatorActivity.this, R.string.no_matching_memory_address_found, Toast.LENGTH_SHORT).show();
+						return;
+					}
+
+					listAdapter.clear();
+					for (int i = 0; i < searchResults.length; i++) {
+						listAdapter.add(String.format("0x%08X", searchResults[i].addr));
+					}
+					
+					searchResultTextView.setText(String.format(getString(R.string.search_results_n_matches), searchResults.length));
+					Toast.makeText(EmulatorActivity.this, String.format(getString(R.string.search_results_n_matches), searchResults.length), Toast.LENGTH_SHORT).show();
+					
+				} catch (NumberFormatException e) {
+					Toast.makeText(EmulatorActivity.this, R.string.please_enter_a_valid_number, Toast.LENGTH_SHORT).show();
+				} catch (Exception e) {
+					Toast.makeText(EmulatorActivity.this, getString(R.string.search_failed) + e.getMessage(), Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String selectedItem = listAdapter.getItem(position);
+				if (selectedItem != null) {
+					selectedAddressTextView.setText(getString(R.string.address_selected) + selectedItem);
+				}
+			}
+		});
+
+		btnWrite.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String selectedAddressStr =selectedAddressTextView.getText().toString();
+				if (selectedAddressStr.split("0x").length!=2) {
+					Toast.makeText(EmulatorActivity.this, R.string.please_select_the_memory_address_to_write_to_first, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				selectedAddressStr = selectedAddressStr.split("0x")[1];
+				
+				String writeValueStr = writeValueEditText.getText().toString();
+				if (writeValueStr.isEmpty()) {
+					Toast.makeText(EmulatorActivity.this, R.string.please_enter_the_value_to_write, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				
+				try {
+					long address = Long.parseLong(selectedAddressStr.toUpperCase(), 16);
+					long writeValue = Utils.convert_hex_str_to_long(writeValueStr);
+					int writeType = searchTypeSpinner.getSelectedItemPosition() + 1;
+					String exception_msg_prefix=getString(R.string.the_value_to_be_written_cannot_be_greater_than);
+
+					switch (writeType) {
+									case 1:
+										if(writeValue > 0xFF)
+											throw new Exception(exception_msg_prefix+"0xFF");
+										break;
+
+									case 2:
+										if(writeValue > 0xFFFF)
+											throw new Exception(exception_msg_prefix+"0xFFFF");
+										break;
+
+									case 3:
+										if(writeValue > 0xFFFFFFFFL)
+											throw new Exception(exception_msg_prefix+"0xFFFFFFFF");
+										break;
+					}
+					
+					Emulator.CheatInfo writeInfo = new Emulator.CheatInfo();
+					writeInfo.type = writeType;
+					writeInfo.addr = address;
+					writeInfo.value = writeValue;
+
+					Emulator.get.set_cheat(writeInfo);
+					
+					Toast.makeText(EmulatorActivity.this, getString(R.string.write_successful)+": 0x" + Long.toHexString(address) + " = " + writeValue, Toast.LENGTH_SHORT).show();
+					
+				} catch (Exception e) {
+					Toast.makeText(EmulatorActivity.this, getString(R.string.write_failed)+": " + e.getMessage(), Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		
+		dialog.show();
+	}
+
+	void show_quit_confirmation() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setPositiveButton(R.string.quit, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				close_sidebar();
+				show_closing_dialog();
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		builder.show();
+	}
+	
+	void close_sidebar() {
+		if (drawerLayout != null && drawerLayout.isDrawerOpen(findViewById(R.id.sidebar))) {
+			drawerLayout.closeDrawer(findViewById(R.id.sidebar));
+		}
 	}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,48 +394,16 @@ public class EmulatorActivity extends Activity implements View.OnGenericMotionLi
 	@Override
 	public void onBackPressed()
 	{
-
         if(delay_dialog!=null)
             return;
 		
-		AlertDialog.Builder ab=new AlertDialog.Builder(this);
-		ab.setPositiveButton(R.string.quit, new DialogInterface.OnClickListener(){
-
-				@Override
-				public void onClick(DialogInterface p1, int p2)
-				{
-					p1.cancel();
-					show_closing_dialog();
-					/*try{
-                        //if(Emulator.get.is_running())
-                        //Emulator.get.pause();
-						Emulator.get.quit();
-				}catch(Exception e){}
-				finally{
-					p1.cancel();
-					finish();
-				}*/
+		if (drawerLayout != null && !drawerLayout.isDrawerOpen(findViewById(R.id.sidebar))) {
+			drawerLayout.openDrawer(findViewById(R.id.sidebar));
+		} else if (drawerLayout != null && drawerLayout.isDrawerOpen(findViewById(R.id.sidebar))) {
+			drawerLayout.closeDrawer(findViewById(R.id.sidebar));
+		} else {
+			show_quit_confirmation();
 		}
-				
-			
-		});
-        
-        /*ab.setNegativeButton("TE", new DialogInterface.OnClickListener(){
-
-                @Override
-                public void onClick(DialogInterface p1, int p2)
-                {
-                    if(Emulator.get.is_running())
-                         Emulator.get.pause();
-                     else if(Emulator.get.is_paused())
-                         Emulator.get.resume();
-                }
-                
-            
-        });*/
-        //if(Emulator.get.is_running())
-		//Emulator.get.pause();
-		ab.create().show();
 	}
 	
 	@Override
